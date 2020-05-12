@@ -24,6 +24,11 @@ const STYLES = StyleSheet.create({
   },
   buttTxt: {
     color: '#fff'
+  },
+  listItem: {
+    padding: 10,
+    fontSize: 18,
+    height: 44
   }
 });
 
