@@ -13,7 +13,7 @@ class ExerciseScreen extends Component {
     return (
         <View style={STYLES.page}>
           <View style={STYLES.main}>
-            <Text>jupp</Text>
+            <Text>{JSON.stringify(this.props.route.params.exercise)}</Text>
           </View>
         </View>
     )
