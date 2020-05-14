@@ -5,7 +5,7 @@ const STYLES = StyleSheet.create({
     flex: 1
   },
   navbar: {
-    backgroundColor: '#ffa',
+    backgroundColor: '#ffa'
   },
   main: {
     flexGrow: 1.0,
@@ -29,6 +29,15 @@ const STYLES = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     height: 44
+  },
+  description: {
+    padding: 10,
+    fontSize: 18,
+    fontStyle: 'italic'
+  },
+  detail: {
+    padding: 10,
+    fontSize: 24
   }
 });
 

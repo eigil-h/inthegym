@@ -23,7 +23,8 @@ class WorkoutScreen extends Component {
                               <Text style={STYLES.listItem}>{item.title}</Text>
                             </View>
                           </TouchableHighlight>
-                      )}/>
+                      )}
+            keyExtractor={(item, index) => item.title}/>
           </View>
         </View>
     )

@@ -6,7 +6,7 @@ const EXERCISE_LIGHT = [
     amount: 3,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "bulgarian split",
@@ -14,7 +14,7 @@ const EXERCISE_LIGHT = [
     amount: 1,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "strake markløft",
@@ -22,7 +22,7 @@ const EXERCISE_LIGHT = [
     amount: 32.5,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "knebøy",
@@ -30,7 +30,7 @@ const EXERCISE_LIGHT = [
     amount: 30.0,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "leg extension",
@@ -39,7 +39,7 @@ const EXERCISE_LIGHT = [
     amount: 1,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "nedtrekk",
@@ -48,7 +48,7 @@ const EXERCISE_LIGHT = [
     amount: 0.2,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "brystpress",
@@ -56,7 +56,7 @@ const EXERCISE_LIGHT = [
     amount: 4,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   },
   {
     title: "skulderpress",
@@ -64,7 +64,7 @@ const EXERCISE_LIGHT = [
     amount: 2,
     series: 3,
     repeats: 14,
-    pause: "1m30s"
+    pause: 90
   }
 ];
 
@@ -75,7 +75,7 @@ const EXERCISE_MEDIUM = [
     amount: 62.5,
     series: 3,
     repeats: 8,
-    pause: "2m"
+    pause: 120
   },
   {
     title: "knebøy",
@@ -83,7 +83,7 @@ const EXERCISE_MEDIUM = [
     amount: 50.0,
     series: 3,
     repeats: 8,
-    pause: "2m"
+    pause: 120
   },
   {
     title: "chins",
@@ -92,7 +92,7 @@ const EXERCISE_MEDIUM = [
     amount: 0.4,
     series: 3,
     repeats: 8,
-    pause: "2m"
+    pause: 120
   },
   {
     title: "Roing med stang",
@@ -100,7 +100,7 @@ const EXERCISE_MEDIUM = [
     amount: 32.5,
     series: 3,
     repeats: 8,
-    pause: "2m"
+    pause: 120
   },
   {
     title: "Skrå brystpress med hantler",
@@ -108,7 +108,7 @@ const EXERCISE_MEDIUM = [
     amount: 4,
     series: 3,
     repeats: 8,
-    pause: "2m"
+    pause: 120
   },
   {
     title: "Sidehev med hantler",
@@ -116,7 +116,7 @@ const EXERCISE_MEDIUM = [
     amount: 2,
     series: 3,
     repeats: 8,
-    pause: "2m"
+    pause: 120
   }
 ];
 
@@ -127,7 +127,7 @@ const EXERCISE_HEAVY = [
     amount: 50.0,
     series: 3,
     repeats: 5,
-    pause: "2m30s"
+    pause: 150
   },
   {
     title: "markløft",
@@ -135,7 +135,7 @@ const EXERCISE_HEAVY = [
     amount: 70.0,
     series: 3,
     repeats: 5,
-    pause: "2m30s"
+    pause: 150
   },
   {
     title: "benkpress",
@@ -143,7 +143,7 @@ const EXERCISE_HEAVY = [
     amount: 50.0,
     series: 3,
     repeats: 5,
-    pause: "2m30s"
+    pause: 150
   },
   {
     title: "roing med hantel",
@@ -151,7 +151,7 @@ const EXERCISE_HEAVY = [
     amount: 7,
     series: 3,
     repeats: 5,
-    pause: "2m30s"
+    pause: 150
   },
   {
     title: "Skulderpress med hantler",
@@ -159,7 +159,7 @@ const EXERCISE_HEAVY = [
     amount: 4,
     series: 3,
     repeats: 5,
-    pause: "2m30s"
+    pause: 150
   }
 ];
 

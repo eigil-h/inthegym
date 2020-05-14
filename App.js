@@ -17,7 +17,7 @@ export default function App() {
           <Stack.Screen name="Home"
                         component={HomeScreen}
                         options={{
-                          title: "InTheGym Home",
+                          title: "InTheGym",
                           headerStyle: STYLES.navbar,
                           headerTintColor: '#f00',
                           headerTitleStyle: {
@@ -27,7 +27,7 @@ export default function App() {
           <Stack.Screen name="Workout"
                         component={WorkoutScreen}
                         options={({route}) => ({
-                          title: `InTheGym Workout |  ${route.params.title}`,
+                          title: `${route.params.title} workout`,
                           headerStyle: STYLES.navbar,
                           headerTintColor: '#f00',
                           headerTitleStyle: {
@@ -37,7 +37,7 @@ export default function App() {
           <Stack.Screen name="Exercise"
                         component={ExerciseScreen}
                         options={({route}) => ({
-                          title: `InTheGym Exercise |  ${route.params.title}`,
+                          title: `${route.params.title} exercise`,
                           headerStyle: STYLES.navbar,
                           headerTintColor: '#f00',
                           headerTitleStyle: {
