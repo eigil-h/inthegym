@@ -2,7 +2,6 @@ import {StyleSheet} from "react-native";
 
 const STYLES = StyleSheet.create({
   page: {
-    flex: 1
   },
   navbar: {
     backgroundColor: '#ffa'
@@ -11,8 +10,7 @@ const STYLES = StyleSheet.create({
     flexGrow: 1.0,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    direction: 'inherit',
-    backgroundColor: '#cfc'
+    direction: 'inherit'
   },
   butt: {
     width: 100,
