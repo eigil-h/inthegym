@@ -1,6 +1,12 @@
 import React, {useState} from 'react';
-import {Text, TouchableHighlight, View} from "react-native";
+import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import STYLES from "../../constants/styles";
+
+const Styles = StyleSheet.create({
+  page: {
+    flexDirection: 'column'
+  }
+});
 
 const ExerciseScreen = ({route: {params: {exercise}}}) => {
   const [currentSeries, setCurrentSeries] = useState(0);
@@ -13,15 +19,17 @@ const ExerciseScreen = ({route: {params: {exercise}}}) => {
 
   return (
     <View style={STYLES.screen}>
-      <Text style={STYLES.description}>"{exercise['description']}"</Text>
-      <Text style={STYLES.detail}>{details}</Text>
-      <TouchableHighlight
-        key="startButton"
-        onPress={() => setActive(true)}>
-        <View style={STYLES.butt}>
-          <Text style={STYLES.buttTxt}>START</Text>
-        </View>
-      </TouchableHighlight>
+      <View style={Styles.page}>
+        <Text style={STYLES.description}>"{exercise['description']}"</Text>
+        <Text style={STYLES.detail}>{details}</Text>
+        <TouchableHighlight
+          key="startButton"
+          onPress={() => setActive(true)}>
+          <View style={STYLES.butt}>
+            <Text style={STYLES.buttTxt}>START</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 }
