@@ -1,33 +1,25 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {Text, TouchableHighlight, View} from "react-native";
 import STYLES from "../../constants/styles";
 
-class ExerciseScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentSeries: 0,
-      countDown: this.props.route.params.exercise['pause'],
-      active: false
-    };
-  }
+const ExerciseScreen = (props) => {
+  const [currentSeries, setCurrentSeries] = useState(0);
+  const [countDown, setCountDown] = useState(props.route.params.exercise['pause']);
+  const [active, setActive] = useState(false);
 
-  render() {
-    const { active } = this.state;
-    return (
-        <View style={STYLES.page}>
-          <View style={STYLES.main}>
-            <Text style={STYLES.description}>"{this.props.route.params.exercise['description']}"</Text>
-            <Text style={STYLES.detail}>{this.props.route.params.exercise['repeats']} repeats of {this.props.route.params.exercise['amount']} {this.props.route.params.exercise['unit']} in {this.props.route.params.exercise['series']} series</Text>
-            <TouchableHighlight key="startButton" onPress={() => this.setState({active: true})}>
-              <View style={STYLES.butt}>
-                <Text style={STYLES.buttTxt}>START</Text>
-              </View>
-            </TouchableHighlight>
+  return (
+    <View style={STYLES.page}>
+      <View style={STYLES.main}>
+        <Text style={STYLES.description}>"{props.route.params.exercise['description']}"</Text>
+        <Text style={STYLES.detail}>{props.route.params.exercise['repeats']} repeats of {props.route.params.exercise['amount']} {props.route.params.exercise['unit']} in {props.route.params.exercise['series']} series</Text>
+        <TouchableHighlight key="startButton" onPress={() => setActive(true)}>
+          <View style={STYLES.butt}>
+            <Text style={STYLES.buttTxt}>START</Text>
           </View>
-        </View>
-    )
-  }
+        </TouchableHighlight>
+      </View>
+    </View>
+  );
 }
 
 export default ExerciseScreen
