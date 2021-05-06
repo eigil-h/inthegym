@@ -1,12 +1,10 @@
 import {StyleSheet} from "react-native";
 
 const STYLES = StyleSheet.create({
-  page: {
-  },
   navbar: {
     backgroundColor: '#ffa'
   },
-  main: {
+  screen: {
     flexGrow: 1.0,
     flexDirection: 'row',
     flexWrap: 'wrap',
