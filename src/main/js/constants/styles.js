@@ -7,8 +7,7 @@ const STYLES = StyleSheet.create({
   screen: {
     flexGrow: 1.0,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    direction: 'inherit'
+    flexWrap: 'wrap'
   },
   butt: {
     width: 100,
@@ -20,6 +19,10 @@ const STYLES = StyleSheet.create({
   },
   buttTxt: {
     color: '#fff'
+  },
+  buttTxtLarge: {
+    color: '#fff',
+    fontSize: 36
   },
   listItem: {
     padding: 10,
@@ -34,6 +37,20 @@ const STYLES = StyleSheet.create({
   detail: {
     padding: 10,
     fontSize: 24
+  },
+  exercise: {
+    flexGrow: 1.0,
+    flexDirection: 'column'
+  },
+  series: {
+    marginLeft: 30,
+    fontSize: 24,
+    color: 'red'
+  },
+  countDown: {
+    marginLeft: 30,
+    fontSize: 24,
+    color: 'green'
   }
 });
 

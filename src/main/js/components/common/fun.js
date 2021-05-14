@@ -1,5 +1,21 @@
-import {Alert} from "react-native";
+import {useEffect, useRef} from 'react';
 
-export function onPressButton() {
-  Alert.alert('You clicked the button!')
+/**
+ * https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+ */
+export function useInterval(callback, timeout) {
+  const savedCallback = useRef();
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  });
+
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+
+    const id = setInterval(tick, timeout);
+    return () => clearInterval(id);
+  }, [timeout]);
 }
