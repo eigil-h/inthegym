@@ -163,10 +163,65 @@ const EXERCISE_HEAVY = [
   }
 ];
 
+const EXERCISE_LIGHT_REDUCED = [
+  {
+    title: "thrusters",
+    description: "squat then throw kettle bells or similar up in the air while not loosing the grip",
+    unit: "dumbbell disc",
+    amount: 1,
+    series: 3,
+    repeats: 14,
+    pause: 90
+  },
+  {
+    title: "bulgarian split",
+    unit: "dumbbell disc",
+    amount: 1,
+    series: 3,
+    repeats: 14,
+    pause: 90
+  },
+  {
+    title: "strake markløft",
+    unit: "kg",
+    amount: 30.0,
+    series: 3,
+    repeats: 14,
+    pause: 90
+  },
+  {
+    title: "knebøy",
+    unit: "kg",
+    amount: 30.0,
+    series: 3,
+    repeats: 14,
+    pause: 90
+  },
+  {
+    title: "brystpress, 3 minutes super slow",
+    description: "note - time rather than repeats is not yet supported by the app",
+    unit: "dumbbell disc",
+    amount: 1,
+    series: 2,
+    repeats: 0,
+    pause: 30
+  },
+  {
+    title: "skulderpress, 3 minutes super slow",
+    description: "note - time rather than repeats is not yet supported by the app",
+    unit: "dumbbell disc",
+    amount: 1,
+    series: 2,
+    repeats: 0,
+    pause: 30
+  }
+];
+
 const WORKOUT = {
   lett: EXERCISE_LIGHT,
   medium: EXERCISE_MEDIUM,
-  tung:  EXERCISE_HEAVY
+  tung:  EXERCISE_HEAVY,
+  'lett redusert': EXERCISE_LIGHT_REDUCED
 };
 
 export default WORKOUT
