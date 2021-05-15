@@ -18,7 +18,8 @@ const STYLES = StyleSheet.create({
     backgroundColor: '#4af'
   },
   buttTxt: {
-    color: '#fff'
+    color: '#fff',
+    textAlign: 'center'
   },
   buttTxtLarge: {
     color: '#fff',

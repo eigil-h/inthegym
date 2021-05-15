@@ -1,4 +1,4 @@
-const EXERCISE_LIGHT = [
+const WORKOUT_LIGHT = [
   {
     title: "thrusters",
     description: "squat then throw kettle bells or similar up in the air while not loosing the grip",
@@ -68,7 +68,7 @@ const EXERCISE_LIGHT = [
   }
 ];
 
-const EXERCISE_MEDIUM = [
+const WORKOUT_MEDIUM = [
   {
     title: "markløft",
     unit: "kg",
@@ -120,7 +120,7 @@ const EXERCISE_MEDIUM = [
   }
 ];
 
-const EXERCISE_HEAVY = [
+const WORKOUT_HEAVY = [
   {
     title: "frontbøy",
     unit: "kg",
@@ -163,12 +163,12 @@ const EXERCISE_HEAVY = [
   }
 ];
 
-const EXERCISE_LIGHT_REDUCED = [
+const WORKOUT_LIGHT_REDUCED = [
   {
     title: "thrusters",
     description: "squat then throw kettle bells or similar up in the air while not loosing the grip",
     unit: "dumbbell disc",
-    amount: 1,
+    amount: 2,
     series: 3,
     repeats: 14,
     pause: 90
@@ -184,17 +184,18 @@ const EXERCISE_LIGHT_REDUCED = [
   {
     title: "strake markløft",
     unit: "kg",
-    amount: 30.0,
+    amount: 32.5,
     series: 3,
     repeats: 14,
     pause: 90
   },
   {
-    title: "knebøy",
+    title: "grunne knebøy",
+    description: 'ikke gå helt ned',
     unit: "kg",
-    amount: 30.0,
+    amount: 20.0,
     series: 3,
-    repeats: 14,
+    repeats: 10,
     pause: 90
   },
   {
@@ -217,11 +218,56 @@ const EXERCISE_LIGHT_REDUCED = [
   }
 ];
 
+const WORKOUT_MEDIUM_REDUCED = [
+  {
+    title: "markløft",
+    unit: "kg",
+    amount: 60.0,
+    series: 3,
+    repeats: 8,
+    pause: 120
+  },
+  {
+    title: "knebøy",
+    unit: "kg",
+    amount: 45.0,
+    series: 3,
+    repeats: 8,
+    pause: 120
+  },
+  {
+    title: "skrå push up, super slow",
+    description: "bruk stang",
+    unit: "body",
+    amount: 1,
+    series: 2,
+    repeats: 0,
+    pause: 30
+  },
+  {
+    title: "Skrå brystpress med hantler, super slow",
+    unit: "dumbbell disc",
+    amount: 1,
+    series: 2,
+    repeats: 0,
+    pause: 30
+  },
+  {
+    title: "Skrå sidehev med discs",
+    unit: "kg",
+    amount: 2.5,
+    series: 2,
+    repeats: 0,
+    pause: 30
+  }
+];
+
 const WORKOUT = {
-  lett: EXERCISE_LIGHT,
-  medium: EXERCISE_MEDIUM,
-  tung:  EXERCISE_HEAVY,
-  'lett redusert': EXERCISE_LIGHT_REDUCED
+  lett: WORKOUT_LIGHT,
+  medium: WORKOUT_MEDIUM,
+  tung:  WORKOUT_HEAVY,
+  'lett redusert': WORKOUT_LIGHT_REDUCED,
+  'medium redusert': WORKOUT_MEDIUM_REDUCED
 };
 
 export default WORKOUT
