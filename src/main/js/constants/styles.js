@@ -5,7 +5,6 @@ const STYLES = StyleSheet.create({
     backgroundColor: '#ffa'
   },
   screen: {
-    flexGrow: 1.0,
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
@@ -40,7 +39,6 @@ const STYLES = StyleSheet.create({
     fontSize: 24
   },
   exercise: {
-    flexGrow: 1.0,
     flexDirection: 'column'
   },
   series: {

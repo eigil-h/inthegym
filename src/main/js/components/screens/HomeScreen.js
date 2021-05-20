@@ -5,14 +5,14 @@ import WORKOUT from "../../data/hardboiled"
 
 const HomeScreen = ({navigation}) => (
   <View style={STYLES.screen}>
-    {Object.keys(WORKOUT).map(key =>
-      <TouchableHighlight key={key}
-                          onPress={() => navigation.navigate(
-                            'Workout',
-                            {title: key, exercises: WORKOUT[key]}
-                          )}>
+    {Object.keys(WORKOUT).map(title =>
+      <TouchableHighlight key={title}
+                          onPress={() => navigation.navigate('Workout', {
+                            title,
+                            exercises: WORKOUT[title]
+                          })}>
         <View style={STYLES.butt}>
-          <Text style={STYLES.buttTxt}>{key}</Text>
+          <Text style={STYLES.buttTxt}>{title}</Text>
         </View>
       </TouchableHighlight>
     )}
