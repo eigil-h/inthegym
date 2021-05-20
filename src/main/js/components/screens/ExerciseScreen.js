@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import STYLES from "../../constants/styles";
-import {useInterval} from "../common/fun";
+import {useInterval, noop} from "../common/fun";
 
 const Styles = StyleSheet.create({
   page: {
@@ -33,10 +33,11 @@ const Content = ({exercise, navigation}) => {
   const [isPaused, setIsPaused] = useState(false);
 
   const isStarting = currentSeries === 0;
-  const isLast = currentSeries === exercise['series'];
+  const isLast = currentSeries >= exercise['series'];
   const isEnded = currentSeries > exercise['series'];
 
-  const start = () => setCurrentSeries(1);
+  const begin = () => setCurrentSeries(1);
+  const end = () => setCurrentSeries(exercise['series'] + 1);
   const triggerCountDown = () => {
     setCurrentSeries((prev) => prev + 1);
     setIsPaused(true);
@@ -53,8 +54,8 @@ const Content = ({exercise, navigation}) => {
     return (
       <TouchableHighlight
         key="startButton"
-        onPress={start}
-        onLongPress={start}>
+        onPress={begin}
+        onLongPress={begin}>
         <View style={STYLES.butt}>
           <Text style={STYLES.buttTxt}>START</Text>
         </View>
@@ -83,7 +84,8 @@ const Content = ({exercise, navigation}) => {
       </Text>
       <TouchableHighlight
         key="pauseButton"
-        onLongPress={triggerCountDown}>
+        onPress={isLast ? end : noop}
+        onLongPress={isLast ? noop : triggerCountDown}>
         <View style={STYLES.butt}>
           <Text style={STYLES.buttTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
         </View>

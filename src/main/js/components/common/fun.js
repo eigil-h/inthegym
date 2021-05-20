@@ -19,3 +19,5 @@ export function useInterval(callback, timeout) {
     return () => clearInterval(id);
   }, [timeout]);
 }
+
+export function noop() {}
