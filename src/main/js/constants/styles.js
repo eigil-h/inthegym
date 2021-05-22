@@ -53,4 +53,10 @@ const STYLES = StyleSheet.create({
   }
 });
 
+export const pressableStyle = ({pressed}) => [{
+  backgroundColor: pressed
+    ? 'yellow'
+    : 'transparent'
+}];
+
 export default STYLES

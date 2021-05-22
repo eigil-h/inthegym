@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
-import STYLES from "../../constants/styles";
+import {Pressable, StyleSheet, Text, View} from "react-native";
+import STYLES, {pressableStyle} from "../../constants/styles";
 import {useInterval, noop} from "../common/fun";
 
 const Styles = StyleSheet.create({
@@ -44,14 +44,15 @@ const Content = ({exercise, navigation}) => {
 
   if (isStarting) {
     return (
-      <TouchableHighlight
-        key="startButton"
+      <Pressable
         onPress={begin}
-        onLongPress={begin}>
+        onLongPress={begin}
+        style={pressableStyle}
+      >
         <View style={STYLES.butt}>
           <Text style={STYLES.buttTxt}>START</Text>
         </View>
-      </TouchableHighlight>
+      </Pressable>
     );
   }
 
@@ -74,14 +75,15 @@ const Content = ({exercise, navigation}) => {
       <Text style={STYLES.series}>
         Serie #{currentSeries} in progress...
       </Text>
-      <TouchableHighlight
-        key="pauseButton"
+      <Pressable
         onPress={isLast ? navigation.goBack : noop}
-        onLongPress={isLast ? noop : triggerCountDown}>
+        onLongPress={isLast ? noop : triggerCountDown}
+        style={pressableStyle}
+      >
         <View style={STYLES.butt}>
           <Text style={STYLES.buttTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
         </View>
-      </TouchableHighlight></View>
+      </Pressable></View>
   );
 };
 
@@ -99,13 +101,14 @@ const CountDown = ({from, endCountDown}) => {
   }, [count]);
 
   return (
-    <TouchableHighlight
-      key="countDownButton"
-      onLongPress={endCountDown}>
+    <Pressable
+      onLongPress={endCountDown}
+      style={pressableStyle}
+    >
       <View style={STYLES.butt}>
         <Text style={STYLES.buttTxtLarge}>{count}</Text>
       </View>
-    </TouchableHighlight>
+    </Pressable>
   );
 };
 
