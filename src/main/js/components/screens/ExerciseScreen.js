@@ -33,22 +33,14 @@ const Content = ({exercise, navigation}) => {
   const [isPaused, setIsPaused] = useState(false);
 
   const isStarting = currentSeries === 0;
-  const isLast = currentSeries >= exercise['series'];
-  const isEnded = currentSeries > exercise['series'];
+  const isLast = currentSeries === exercise['series'];
 
   const begin = () => setCurrentSeries(1);
-  const end = () => setCurrentSeries(exercise['series'] + 1);
   const triggerCountDown = () => {
     setCurrentSeries((prev) => prev + 1);
     setIsPaused(true);
   };
   const endCountDown = () => setIsPaused(false);
-
-  useEffect(() => {
-    if(isEnded) {
-      navigation.goBack();
-    }
-  }, [isEnded]);
 
   if (isStarting) {
     return (
@@ -84,7 +76,7 @@ const Content = ({exercise, navigation}) => {
       </Text>
       <TouchableHighlight
         key="pauseButton"
-        onPress={isLast ? end : noop}
+        onPress={isLast ? navigation.goBack : noop}
         onLongPress={isLast ? noop : triggerCountDown}>
         <View style={STYLES.butt}>
           <Text style={STYLES.buttTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
