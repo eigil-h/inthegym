@@ -10,9 +10,11 @@ const Styles = StyleSheet.create({
 });
 
 const ExerciseScreen = ({route: {params: {exercise}}, navigation}) => {
-  const details = `${exercise['repeats']} repeats of ` +
-    `${exercise['amount']} ${exercise['unit']} in ` +
-    `${exercise['series']} series`;
+  const load = exercise['load'];
+  const execution = exercise['execution'];
+
+  const details = `${execution['amount']} ${execution['unit']} of ` +
+    `${load['amount']} ${load['unit']} in ${exercise['series']} series`;
 
   return (
     <View style={STYLES.screen}>
