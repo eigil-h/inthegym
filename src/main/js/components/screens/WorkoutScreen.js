@@ -1,21 +1,25 @@
 import React from 'react';
-import {Text, View, FlatList, Pressable} from "react-native";
-import STYLES, {pressableStyle} from "../../constants/styles";
+import {
+  Text, View, FlatList, Pressable
+} from 'react-native';
+import STYLES, { pressableStyle } from '../../constants/styles';
 
-const WorkoutScreen = ({route: {params: {exercises}}, navigation}) => (
+const WorkoutScreen = ({ route: { params: { exercises } }, navigation }) => (
   <View style={STYLES.screen}>
     <FlatList
       data={exercises}
-      renderItem={({item}) =>
+      renderItem={({ item }) => (
         <Exercise
           exercise={item}
           navigation={navigation}
-        />}
-      keyExtractor={(item) => item.title}/>
+        />
+      )}
+      keyExtractor={(item) => item.title}
+    />
   </View>
 );
 
-const Exercise = ({exercise, navigation}) => (
+const Exercise = ({ exercise, navigation }) => (
   <Pressable
     onPress={() => navigation.navigate('Exercise', {
       title: exercise.title,
@@ -29,4 +33,4 @@ const Exercise = ({exercise, navigation}) => (
   </Pressable>
 );
 
-export default WorkoutScreen
+export default WorkoutScreen;

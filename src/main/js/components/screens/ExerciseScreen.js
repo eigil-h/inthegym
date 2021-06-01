@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from "react-native";
-import STYLES, {pressableStyle} from "../../constants/styles";
-import {useInterval, noop} from "../common/fun";
+import React, { useEffect, useState } from 'react';
+import {
+  Pressable, StyleSheet, Text, View
+} from 'react-native';
+import STYLES, { pressableStyle } from '../../constants/styles';
+import { useInterval, noop } from '../common/fun';
 
 const Styles = StyleSheet.create({
   page: {
@@ -9,17 +11,20 @@ const Styles = StyleSheet.create({
   }
 });
 
-const ExerciseScreen = ({route: {params: {exercise}}, navigation}) => {
-  const load = exercise['load'];
-  const execution = exercise['execution'];
+const ExerciseScreen = ({ route: { params: { exercise } }, navigation }) => {
+  const { load } = exercise;
+  const { execution } = exercise;
 
-  const details = `${execution['amount']} ${execution['unit']} of ` +
-    `${load['amount']} ${load['unit']} in ${exercise['series']} series`;
+  const details = `${execution.amount} ${execution.unit} of `
+    + `${load.amount} ${load.unit} in ${exercise.series} series`;
+  const description = exercise?.description || '';
 
   return (
     <View style={STYLES.screen}>
       <View style={Styles.page}>
-        <Text style={STYLES.description}>"{exercise['description']}"</Text>
+        <Text style={STYLES.description}>
+          {`"${description}"`}
+        </Text>
         <Text style={STYLES.detail}>{details}</Text>
         <Content
           exercise={exercise}
@@ -28,14 +33,14 @@ const ExerciseScreen = ({route: {params: {exercise}}, navigation}) => {
       </View>
     </View>
   );
-}
+};
 
-const Content = ({exercise, navigation}) => {
+const Content = ({ exercise, navigation }) => {
   const [currentSeries, setCurrentSeries] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const isStarting = currentSeries === 0;
-  const isLast = currentSeries === exercise['series'];
+  const isLast = currentSeries === exercise.series;
 
   const begin = () => setCurrentSeries(1);
   const triggerCountDown = () => {
@@ -62,10 +67,13 @@ const Content = ({exercise, navigation}) => {
     return (
       <View style={STYLES.exercise}>
         <Text style={STYLES.countDown}>
-          Serie #{currentSeries} coming up...
+          Series #
+          {currentSeries}
+          {' '}
+          coming up...
         </Text>
         <CountDown
-          from={exercise['pause']}
+          from={exercise.pause}
           endCountDown={endCountDown}
         />
       </View>
@@ -75,7 +83,10 @@ const Content = ({exercise, navigation}) => {
   return (
     <View style={STYLES.exercise}>
       <Text style={STYLES.series}>
-        Serie #{currentSeries} in progress...
+        Serie #
+        {currentSeries}
+        {' '}
+        in progress...
       </Text>
       <Pressable
         onPress={isLast ? navigation.goBack : noop}
@@ -85,11 +96,12 @@ const Content = ({exercise, navigation}) => {
         <View style={STYLES.butt}>
           <Text style={STYLES.buttTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
         </View>
-      </Pressable></View>
+      </Pressable>
+    </View>
   );
 };
 
-const CountDown = ({from, endCountDown}) => {
+const CountDown = ({ from, endCountDown }) => {
   const [count, setCount] = useState(from);
 
   useInterval(() => {
@@ -100,7 +112,7 @@ const CountDown = ({from, endCountDown}) => {
     if (count === 0) {
       endCountDown();
     }
-  }, [count]);
+  }, [count, endCountDown]);
 
   return (
     <Pressable
@@ -114,4 +126,4 @@ const CountDown = ({from, endCountDown}) => {
   );
 };
 
-export default ExerciseScreen
+export default ExerciseScreen;

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {Text, Pressable, View} from "react-native";
-import STYLES, {pressableStyle} from '../../constants/styles'
-import {loadHome} from "../../data/firebase"
+import React, { useEffect, useState } from 'react';
+import { Text, Pressable, View } from 'react-native';
+import STYLES, { pressableStyle } from '../../constants/styles';
+import loadHome from '../../data/firebase';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <View style={STYLES.screen}>
-      {Object.keys(workouts).map(title =>
+      {Object.keys(workouts).map((title) => (
         <Pressable
           key={title}
           onPress={() => navigation.navigate('Workout', {
@@ -25,9 +25,9 @@ const HomeScreen = ({navigation}) => {
             <Text style={STYLES.buttTxt}>{title}</Text>
           </View>
         </Pressable>
-      )}
+      ))}
     </View>
-  )
+  );
 };
 
-export default HomeScreen
+export default HomeScreen;

@@ -1,8 +1,14 @@
-import {StyleSheet} from "react-native";
+import { StyleSheet } from 'react-native';
+
+const navbarBackgroundColor = '#ffa';
+const buttonBackgroundColor = '#4af';
+const buttonTextColor = '#fff';
+const redColor = '#f00';
+const greenColor = '#0f0';
 
 const STYLES = StyleSheet.create({
   navbar: {
-    backgroundColor: '#ffa'
+    backgroundColor: navbarBackgroundColor
   },
   screen: {
     flexDirection: 'row',
@@ -14,14 +20,14 @@ const STYLES = StyleSheet.create({
     margin: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#4af'
+    backgroundColor: buttonBackgroundColor
   },
   buttTxt: {
-    color: '#fff',
+    color: buttonTextColor,
     textAlign: 'center'
   },
   buttTxtLarge: {
-    color: '#fff',
+    color: buttonTextColor,
     fontSize: 36
   },
   listItem: {
@@ -44,19 +50,19 @@ const STYLES = StyleSheet.create({
   series: {
     marginLeft: 30,
     fontSize: 24,
-    color: 'red'
+    color: redColor
   },
   countDown: {
     marginLeft: 30,
     fontSize: 24,
-    color: 'green'
+    color: greenColor
   }
 });
 
-export const pressableStyle = ({pressed}) => [{
+export const pressableStyle = ({ pressed }) => [{
   backgroundColor: pressed
     ? 'yellow'
     : 'transparent'
 }];
 
-export default STYLES
+export default STYLES;

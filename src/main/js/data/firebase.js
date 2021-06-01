@@ -6,7 +6,7 @@ firebase.initializeApp({
   projectId: 'in-the-gym'
 });
 
-export const loadHome = (setter) => {
+const loadHome = (setter) => {
   const dbRef = firebase.database().ref();
   dbRef.child('1').get().then((snapshot) => {
     if (snapshot.exists()) {
@@ -14,3 +14,5 @@ export const loadHome = (setter) => {
     }
   });
 };
+
+export default loadHome;
