@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, FlatList, View } from 'react-native';
 import styles from '../styles/WorkoutScreen';
 import ExerciseListItem from './ExerciseListItem';
 import ExerciseDetails from './ExerciseDetails';
 import Exercise from './Exercise';
+import { noop } from '../common/fun';
 
-const WorkoutScreen = ({ route: { params: { exercises } } }) => {
+const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const exercise = exercises[activeIndex];
+
+  useEffect(() => {
+    navigation.addListener('beforeRemove', (ev) => {
+      ev.preventDefault();
+      Alert.alert('Exit workout?',
+        'You have not completed the workout. Progress will be lost!',
+        [{
+          text: 'Yes',
+          style: 'destructive',
+          onPress: () => navigation.dispatch(ev.data.action)
+        },
+        {
+          text: 'No',
+          style: 'cancel',
+          onPress: noop
+        }]);
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.screen}>
