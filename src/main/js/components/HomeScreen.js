@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Pressable, View } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import createStyles, { pressable } from '../styles/HomeScreen';
 import loadHome from '../data/firebase';
 
 const HomeScreen = ({ navigation }) => {
-  const styles = createStyles();
+  const styles = createStyles(useTheme());
+  const pressableStyle = pressable(useTheme());
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
@@ -20,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
             title,
             exercises: workouts[title]
           })}
-          style={pressable}
+          style={pressableStyle}
         >
           <View style={styles.butt}>
             <Text style={styles.buttTxt}>{title}</Text>

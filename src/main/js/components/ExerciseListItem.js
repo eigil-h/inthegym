@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import createStyles from '../styles/ExerciseListItem';
 
 const ExerciseListItem = ({ index, activeIndex, exercise }) => {
-  const styles = createStyles();
+  const styles = createStyles(useTheme());
 
   // eslint-disable-next-line no-nested-ternary
   const statusStyle = index === activeIndex

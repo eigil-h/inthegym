@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
-const createStyles = () => {
-  const { colors } = useTheme();
-
+const createStyles = ({ colors }) => {
   const styles = {
     screen: {
       flexDirection: 'row',
@@ -28,10 +25,8 @@ const createStyles = () => {
   return StyleSheet.create(styles);
 };
 
-export const pressable = ({ pressed }) => {
+export const pressable = ({ colors }) => ({ pressed }) => {
   if (pressed) {
-    const { colors } = useTheme();
-
     return {
       backgroundColor: colors.background,
       shadowColor: colors.background,

@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
-const createStyles = () => {
-  const { colors } = useTheme();
-
+const createStyles = ({ colors }) => {
   const styles = {
     wrapper: {
       width: '90%',
