@@ -1,36 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import styles from '../styles/WorkoutScreen';
 import ExerciseListItem from './ExerciseListItem';
 import ExerciseDetails from './ExerciseDetails';
 import Exercise from './Exercise';
-import { noop } from '../common/fun';
+import PopupDialog from './reusable/PopupDialog';
 
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const exercise = exercises[activeIndex];
+  const [exitDialogEvent, triggerExitDialog] = useState(null);
 
   useEffect(() => {
     navigation.addListener('beforeRemove', (ev) => {
       ev.preventDefault();
-      Alert.alert('Exit workout?',
-        'You have not completed the workout. Progress will be lost!',
-        [{
-          text: 'Yes',
-          style: 'destructive',
-          onPress: () => navigation.dispatch(ev.data.action)
-        },
-        {
-          text: 'No',
-          style: 'cancel',
-          onPress: noop
-        }]);
+      triggerExitDialog(ev);
     });
   }, [navigation]);
 
   return (
     <View style={styles.screen}>
       <View style={styles.mainContainer}>
+        <PopupDialog
+          isVisible={exitDialogEvent !== null}
+          title="Exit workout?"
+          message="You have not completed the workout. Progress will be lost!"
+          onConfirm={() => {
+            navigation.dispatch(exitDialogEvent.data.action);
+          }}
+          onCancel={() => {
+            triggerExitDialog(null);
+          }}
+        />
         <Exercise
           key={activeIndex}
           exercise={exercise}
