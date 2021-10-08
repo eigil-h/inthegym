@@ -10,7 +10,7 @@ const HomeScreen = ({ navigation }) => {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
-    loadHome(setWorkouts);
+    loadHome('eigil', setWorkouts);
   }, []);
 
   return (
