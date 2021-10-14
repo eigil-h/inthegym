@@ -27,7 +27,7 @@ const shared = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     marginBottom: 30,
-    marginLeft: 30
+    marginLeft: 45
   },
   series: {
     fontSize: 24,
@@ -36,6 +36,13 @@ const shared = StyleSheet.create({
   countDown: {
     fontSize: 24,
     color: greenColor
+  },
+  countUp: {
+    position: 'absolute',
+    fontSize: 24,
+    color: pressedBackgroundColor,
+    marginTop: 26,
+    marginLeft: 45
   }
 });
 

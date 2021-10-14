@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import styles, { pressable } from '../styles/Exercise';
-import { noop, useInterval } from '../common/fun';
+import { useInterval } from '../common/fun';
+import PopupDialog from './reusable/PopupDialog';
 
 const Exercise = ({ exercise, onDone }) => {
   const [currentSeries, setCurrentSeries] = useState(0);
@@ -23,7 +24,6 @@ const Exercise = ({ exercise, onDone }) => {
         <Text style={styles.description}>{exercise.description}</Text>
         <Pressable
           onPress={begin}
-          onLongPress={begin}
           style={pressable}
         >
           <Text style={styles.pressTxt}>START</Text>
@@ -48,7 +48,6 @@ const Exercise = ({ exercise, onDone }) => {
           from={exercise.pause}
           endCountDown={endCountDown}
         />
-
       </View>
     );
   }
@@ -63,19 +62,18 @@ const Exercise = ({ exercise, onDone }) => {
           in progress...
         </Text>
       </View>
-      <Pressable
-        onPress={isLast ? onDone : noop}
-        onLongPress={isLast ? noop : triggerCountDown}
-        style={pressable}
-      >
-        <Text style={styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
-      </Pressable>
+
+      <InProgress
+        endFun={isLast ? onDone : triggerCountDown}
+        isLast={isLast}
+      />
     </View>
   );
 };
 
 const CountDown = ({ from, endCountDown }) => {
   const [count, setCount] = useState(from);
+  const [isEndDialog, showEndDialog] = useState(false);
 
   useInterval(() => {
     setCount((prev) => prev - 1);
@@ -88,11 +86,46 @@ const CountDown = ({ from, endCountDown }) => {
   }, [count, endCountDown]);
 
   return (
+    <>
+      <PopupDialog
+        isVisible={isEndDialog}
+        title="Continue?"
+        message="Just making sure"
+        onConfirm={endCountDown}
+        onCancel={() => {
+          showEndDialog(false);
+        }}
+      />
+      <Pressable
+        onPress={() => {
+          showEndDialog(true);
+        }}
+        style={pressable}
+      >
+        <Text style={styles.pressTxt}>{new Date(count * 1000).toISOString().substr(15, 4)}</Text>
+      </Pressable>
+    </>
+  );
+};
+
+const InProgress = ({ endFun, isLast }) => {
+  const [count, setCount] = useState(0);
+
+  useInterval(() => {
+    setCount((prev) => prev + 1);
+  }, 1000);
+
+  return (
     <Pressable
-      onLongPress={endCountDown}
+      onPress={endFun}
       style={pressable}
     >
-      <Text style={styles.pressTxt}>{new Date(count * 1000).toISOString().substr(15, 4)}</Text>
+      {!isLast && (
+      <Text style={styles.countUp}>
+        {new Date(count * 1000).toISOString().substr(15, 4)}
+      </Text>
+      )}
+      <Text style={styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
     </Pressable>
   );
 };

@@ -66,7 +66,7 @@ const createStyles = ({ colors }) => {
     buttons: {
       flexDirection: 'row',
       justifyContent: 'space-around',
-      alignItems: 'baseline',
+      alignItems: 'flex-end',
       width: '100%'
     },
     button: {
