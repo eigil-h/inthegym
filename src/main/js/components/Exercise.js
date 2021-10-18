@@ -64,6 +64,7 @@ const Exercise = ({ exercise, onDone }) => {
       </View>
 
       <InProgress
+        execution={exercise.execution}
         endFun={isLast ? onDone : triggerCountDown}
         isLast={isLast}
       />
@@ -102,19 +103,29 @@ const CountDown = ({ from, endCountDown }) => {
         }}
         style={pressable}
       >
-        <Text style={styles.pressTxt}>{new Date(count * 1000).toISOString().substr(15, 4)}</Text>
+        <Text style={styles.pressTxt}>
+          {new Date(count * 1000).toISOString().substr(15, 4)}
+        </Text>
       </Pressable>
     </>
   );
 };
 
-const InProgress = ({ endFun, isLast }) => {
-  const [count, setCount] = useState(0);
+const InProgress = ({ execution: { unit, amount }, endFun, isLast }) => {
+  const isCountDown = unit === 'seconds';
+  const crement = isCountDown ? -1 : 1;
+  const [count, setCount] = useState(isCountDown ? amount : 0);
   const [isEndDialog, showEndDialog] = useState(false);
 
   useInterval(() => {
-    setCount((prev) => prev + 1);
+    setCount((prev) => prev + crement);
   }, 1000);
+
+  useEffect(() => {
+    if (isCountDown && count === 0) {
+      endFun();
+    }
+  }, [count, endFun, isCountDown]);
 
   return (
     <>
@@ -138,13 +149,12 @@ const InProgress = ({ endFun, isLast }) => {
         style={pressable}
       >
         {!isLast && (
-          <Text style={styles.countUp}>
+          <Text style={isCountDown ? styles.pressTxt : styles.countUp}>
             {new Date(count * 1000).toISOString().substr(15, 4)}
           </Text>
         )}
-        <Text style={styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
+        <Text style={isCountDown ? styles.countUp : styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
       </Pressable>
-
     </>
   );
 };
