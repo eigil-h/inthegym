@@ -89,8 +89,8 @@ const CountDown = ({ from, endCountDown }) => {
     <>
       <PopupDialog
         isVisible={isEndDialog}
-        title="Continue?"
-        message="Just making sure"
+        title="Continue already?"
+        message="The pause is important for maximum workout effect"
         onConfirm={endCountDown}
         onCancel={() => {
           showEndDialog(false);
@@ -110,23 +110,42 @@ const CountDown = ({ from, endCountDown }) => {
 
 const InProgress = ({ endFun, isLast }) => {
   const [count, setCount] = useState(0);
+  const [isEndDialog, showEndDialog] = useState(false);
 
   useInterval(() => {
     setCount((prev) => prev + 1);
   }, 1000);
 
   return (
-    <Pressable
-      onPress={endFun}
-      style={pressable}
-    >
-      {!isLast && (
-      <Text style={styles.countUp}>
-        {new Date(count * 1000).toISOString().substr(15, 4)}
-      </Text>
-      )}
-      <Text style={styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
-    </Pressable>
+    <>
+      <PopupDialog
+        isVisible={isEndDialog}
+        title="Pause?"
+        message="Just making sure HERO"
+        onConfirm={endFun}
+        onCancel={() => {
+          showEndDialog(false);
+        }}
+      />
+      <Pressable
+        onPress={() => {
+          if (isLast) {
+            endFun();
+          } else {
+            showEndDialog(true);
+          }
+        }}
+        style={pressable}
+      >
+        {!isLast && (
+          <Text style={styles.countUp}>
+            {new Date(count * 1000).toISOString().substr(15, 4)}
+          </Text>
+        )}
+        <Text style={styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
+      </Pressable>
+
+    </>
   );
 };
 
