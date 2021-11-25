@@ -115,7 +115,6 @@ const InProgress = ({ execution: { unit, amount }, endFun, isLast }) => {
   const isCountDown = unit === 'seconds';
   const crement = isCountDown ? -1 : 1;
   const [count, setCount] = useState(isCountDown ? amount : 0);
-  const [isEndDialog, showEndDialog] = useState(false);
 
   useInterval(() => {
     setCount((prev) => prev + crement);
@@ -129,23 +128,8 @@ const InProgress = ({ execution: { unit, amount }, endFun, isLast }) => {
 
   return (
     <>
-      <PopupDialog
-        isVisible={isEndDialog}
-        title="Pause?"
-        message="Just making sure HERO"
-        onConfirm={endFun}
-        onCancel={() => {
-          showEndDialog(false);
-        }}
-      />
       <Pressable
-        onPress={() => {
-          if (isLast) {
-            endFun();
-          } else {
-            showEndDialog(true);
-          }
-        }}
+        onPress={endFun}
         style={pressable}
       >
         {!isLast && (
