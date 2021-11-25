@@ -4,14 +4,17 @@ import styles, { pressable } from '../styles/Exercise';
 import { useInterval } from '../common/fun';
 import PopupDialog from './reusable/PopupDialog';
 
-const Exercise = ({ exercise, onDone }) => {
+const Exercise = ({ exercise, onDone, onStarted }) => {
   const [currentSeries, setCurrentSeries] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const isStarting = currentSeries === 0;
   const isLast = currentSeries === exercise.series;
 
-  const begin = () => setCurrentSeries(1);
+  const begin = () => {
+    setCurrentSeries(1);
+    onStarted();
+  };
   const triggerCountDown = () => {
     setCurrentSeries((prev) => prev + 1);
     setIsPaused(true);

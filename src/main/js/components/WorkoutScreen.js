@@ -7,9 +7,12 @@ import Exercise from './Exercise';
 import PopupDialog from './reusable/PopupDialog';
 
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
+  const [isStarted, setWorkoutStarted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
   const [exitDialogEvent, triggerExitDialog] = useState(null);
+  const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
+
+  const onStarted = useCallback(() => setWorkoutStarted(true), []);
 
   const onExerciseDone = useCallback(() => {
     if (activeIndex >= exercises.length - 1) {
@@ -18,14 +21,14 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
     } else {
       setActiveIndex((prevState) => prevState + 1);
     }
-  }, [navigation, activeIndex, exercises]);
+  }, [activeIndex, exercises, navigation]);
 
   const beforeRemove = useCallback((ev) => {
-    if (activeIndex < exercises.length - 1) {
+    if (isStarted && activeIndex < exercises.length - 1) {
       ev.preventDefault();
       triggerExitDialog(ev);
     }
-  }, [activeIndex, exercises]);
+  }, [activeIndex, exercises, isStarted]);
 
   useEffect(() => {
     return navigation.addListener('beforeRemove', beforeRemove);
@@ -53,6 +56,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
           key={activeIndex}
           exercise={exercise}
           onDone={onExerciseDone}
+          onStarted={onStarted}
         />
       </View>
       <View style={styles.sideContainer}>
