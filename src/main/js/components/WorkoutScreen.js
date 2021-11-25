@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 import styles from '../styles/WorkoutScreen';
 import ExerciseListItem from './ExerciseListItem';
@@ -8,15 +8,32 @@ import PopupDialog from './reusable/PopupDialog';
 
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const exercise = exercises[activeIndex];
+  const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
   const [exitDialogEvent, triggerExitDialog] = useState(null);
 
-  useEffect(() => {
-    navigation.addListener('beforeRemove', (ev) => {
+  const onExerciseDone = useCallback(() => {
+    if (activeIndex >= exercises.length - 1) {
+      // noinspection JSUnresolvedFunction
+      navigation.goBack();
+    } else {
+      setActiveIndex((prevState) => prevState + 1);
+    }
+  }, [navigation, activeIndex, exercises]);
+
+  const beforeRemove = useCallback((ev) => {
+    if (activeIndex < exercises.length - 1) {
       ev.preventDefault();
       triggerExitDialog(ev);
-    });
-  }, [navigation]);
+    }
+  }, [activeIndex, exercises]);
+
+  useEffect(() => {
+    return navigation.addListener('beforeRemove', beforeRemove);
+  }, [navigation, beforeRemove]);
+
+  if (!exercise) {
+    return <View />;
+  }
 
   return (
     <View style={styles.screen}>
@@ -35,8 +52,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
         <Exercise
           key={activeIndex}
           exercise={exercise}
-          onDone={() => setActiveIndex((prevState) => (
-            prevState + 1 < exercises.length ? prevState + 1 : prevState))}
+          onDone={onExerciseDone}
         />
       </View>
       <View style={styles.sideContainer}>
@@ -57,7 +73,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
           />
         </View>
         <View style={styles.detailsContainer}>
-          <ExerciseDetails exercise={exercises[activeIndex]} />
+          <ExerciseDetails exercise={exercise} />
         </View>
       </View>
     </View>
