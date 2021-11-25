@@ -14,6 +14,45 @@ const loadHome = async (userId, setter) => {
   });
 
   setter(docs);
+  // setter(testData);
+};
+
+const testData = {
+  wo1: [
+    {
+      description: 'workout test',
+      execution: {
+        amount: 4,
+        unit: 'repeats',
+      },
+      load: {
+        amount: 1,
+        increase: 0,
+        unit: 'g',
+      },
+      pause: 10,
+      repeats: 0,
+      series: 2,
+      title: 'test'
+    },
+    {
+      description: 'workout test 2',
+      execution: {
+        amount: 4,
+        unit: 'repeats',
+      },
+      load: {
+        amount: 1,
+        increase: 0,
+        unit: 'g',
+      },
+      pause: 10,
+      repeats: 0,
+      series: 2,
+      title: 'test 2'
+    }
+  ],
+  empty: []
 };
 
 export default loadHome;
