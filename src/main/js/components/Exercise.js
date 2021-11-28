@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import styles, { pressable } from '../styles/Exercise';
 import { useInterval } from '../common/fun';
@@ -7,19 +7,18 @@ import PopupDialog from './reusable/PopupDialog';
 const Exercise = ({ exercise, onDone, onStarted }) => {
   const [currentSeries, setCurrentSeries] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-
   const isStarting = currentSeries === 0;
   const isLast = currentSeries === exercise.series;
 
-  const begin = () => {
+  const begin = useCallback(() => {
     setCurrentSeries(1);
     onStarted();
-  };
-  const triggerCountDown = () => {
+  }, [onStarted]);
+  const triggerCoolDown = useCallback(() => {
     setCurrentSeries((prev) => prev + 1);
     setIsPaused(true);
-  };
-  const endCountDown = () => setIsPaused(false);
+  }, []);
+  const endCoolDown = useCallback(() => setIsPaused(false), []);
 
   if (isStarting) {
     return (
@@ -47,9 +46,9 @@ const Exercise = ({ exercise, onDone, onStarted }) => {
           </Text>
         </View>
 
-        <CountDown
+        <CoolDown
           from={exercise.pause}
-          endCountDown={endCountDown}
+          endCoolDown={endCoolDown}
         />
       </View>
     );
@@ -68,14 +67,14 @@ const Exercise = ({ exercise, onDone, onStarted }) => {
 
       <InProgress
         execution={exercise.execution}
-        endFun={isLast ? onDone : triggerCountDown}
+        endFun={isLast ? onDone : triggerCoolDown}
         isLast={isLast}
       />
     </View>
   );
 };
 
-const CountDown = ({ from, endCountDown }) => {
+const CoolDown = ({ from, endCoolDown }) => {
   const [count, setCount] = useState(from);
   const [isEndDialog, showEndDialog] = useState(false);
 
@@ -85,9 +84,9 @@ const CountDown = ({ from, endCountDown }) => {
 
   useEffect(() => {
     if (count === 0) {
-      endCountDown();
+      endCoolDown();
     }
-  }, [count, endCountDown]);
+  }, [count, endCoolDown]);
 
   return (
     <>
@@ -95,7 +94,7 @@ const CountDown = ({ from, endCountDown }) => {
         isVisible={isEndDialog}
         title="Continue already?"
         message="The pause is important for maximum workout effect"
-        onConfirm={endCountDown}
+        onConfirm={endCoolDown}
         onCancel={() => {
           showEndDialog(false);
         }}
@@ -118,6 +117,8 @@ const InProgress = ({ execution: { unit, amount }, endFun, isLast }) => {
   const isCountDown = unit === 'seconds';
   const crement = isCountDown ? -1 : 1;
   const [count, setCount] = useState(isCountDown ? amount : 0);
+  const [isEndDialog, showEndDialog] = useState(false);
+  const triggerEndDialog = useCallback(() => showEndDialog(true), []);
 
   useInterval(() => {
     setCount((prev) => prev + crement);
@@ -131,15 +132,22 @@ const InProgress = ({ execution: { unit, amount }, endFun, isLast }) => {
 
   return (
     <>
+      <PopupDialog
+        isVisible={isEndDialog}
+        title="Abort?"
+        message={`Still ${count} seconds to go!`}
+        onConfirm={endFun}
+        onCancel={() => {
+          showEndDialog(false);
+        }}
+      />
       <Pressable
-        onPress={endFun}
+        onPress={isCountDown ? triggerEndDialog : endFun}
         style={pressable}
       >
-        {!isLast && (
-          <Text style={isCountDown ? styles.pressTxt : styles.countUp}>
-            {new Date(count * 1000).toISOString().substr(15, 4)}
-          </Text>
-        )}
+        <Text style={isCountDown ? styles.pressTxt : styles.countUp}>
+          {new Date(count * 1000).toISOString().substr(15, 4)}
+        </Text>
         <Text style={isCountDown ? styles.countUp : styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
       </Pressable>
     </>
