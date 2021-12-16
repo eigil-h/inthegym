@@ -7,29 +7,36 @@ import ExerciseDetails from './ExerciseDetails';
 import Exercise from './Exercise';
 import PopupDialog from './reusable/PopupDialog';
 
+const WORKOUT_STATE = {
+  INITIAL: 1,
+  STARTED: 2,
+  ENDED: 3
+};
+
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
-  const [isStarted, setWorkoutStarted] = useState(false);
+  const [workoutState, setWorkoutState] = useState(WORKOUT_STATE.INITIAL);
   const [activeIndex, setActiveIndex] = useState(0);
   const [exitDialogEvent, triggerExitDialog] = useState(null);
   const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
 
-  const onStarted = useCallback(() => setWorkoutStarted(true), []);
+  const onStarted = useCallback(() => setWorkoutState(WORKOUT_STATE.STARTED), []);
 
   const onExerciseDone = useCallback(() => {
     if (activeIndex >= exercises.length - 1) {
-      // noinspection JSUnresolvedFunction
-      navigation.goBack();
+      setWorkoutState(WORKOUT_STATE.ENDED);
+      // noinspection JSUnresolvedVariable
+      setTimeout(navigation.goBack, 0);
     } else {
       setActiveIndex((prevState) => prevState + 1);
     }
   }, [activeIndex, exercises, navigation]);
 
   const beforeRemove = useCallback((ev) => {
-    if (isStarted && activeIndex < exercises.length - 1) {
+    if (workoutState === WORKOUT_STATE.STARTED) {
       ev.preventDefault();
       triggerExitDialog(ev);
     }
-  }, [activeIndex, exercises, isStarted]);
+  }, [workoutState]);
 
   useEffect(() => {
     return navigation.addListener('beforeRemove', beforeRemove);
