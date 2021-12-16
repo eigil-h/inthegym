@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, View } from 'react-native';
+import { useKeepAwake } from 'expo-keep-awake';
 import styles from '../styles/WorkoutScreen';
 import ExerciseListItem from './ExerciseListItem';
 import ExerciseDetails from './ExerciseDetails';
@@ -33,6 +34,8 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   useEffect(() => {
     return navigation.addListener('beforeRemove', beforeRemove);
   }, [navigation, beforeRemove]);
+
+  useKeepAwake();
 
   if (!exercise) {
     return <View />;
