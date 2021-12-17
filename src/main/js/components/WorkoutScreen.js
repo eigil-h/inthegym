@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
-import styles from '../styles/WorkoutScreen';
 import ExerciseListItem from './ExerciseListItem';
 import ExerciseDetails from './ExerciseDetails';
 import Exercise from './Exercise';
@@ -93,5 +92,31 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
     </View>
   );
 };
+
+/*
+ * STYLE
+ */
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  mainContainer: {
+    flex: 27
+  },
+  sideContainer: {
+    flex: 23,
+    flexDirection: 'row'
+  },
+  listContainer: {
+    flex: 27,
+    flexDirection: 'column',
+    paddingLeft: 10
+  },
+  detailsContainer: {
+    flex: 23,
+    flexDirection: 'column'
+  }
+});
 
 export default WorkoutScreen;

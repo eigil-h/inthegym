@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Pressable, View } from 'react-native';
+import {
+  Text, Pressable, View, StyleSheet
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import createStyles, { pressable } from '../styles/HomeScreen';
 import loadHome from '../data/firebase';
+import { noop } from '../common/fun';
 
 const HomeScreen = ({ navigation }) => {
   const styles = createStyles(useTheme());
@@ -10,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
-    loadHome('eigil', setWorkouts);
+    loadHome('eigil', setWorkouts).then(noop);
   }, []);
 
   return (
@@ -31,6 +33,54 @@ const HomeScreen = ({ navigation }) => {
       ))}
     </View>
   );
+};
+
+/*
+ * STYLE
+ */
+const createStyles = ({ colors }) => {
+  const styles = {
+    screen: {
+      flexDirection: 'row',
+      flexWrap: 'wrap'
+    },
+    butt: {
+      width: 100,
+      height: 100,
+      margin: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.card
+    },
+    buttTxt: {
+      color: colors.text,
+      textAlign: 'center',
+      fontSize: 18,
+      fontFamily: 'serif'
+    }
+  };
+
+  return StyleSheet.create(styles);
+};
+
+const pressable = ({ colors }) => ({ pressed }) => {
+  if (pressed) {
+    return {
+      backgroundColor: colors.background,
+      shadowColor: colors.background,
+      shadowOffset: {
+        width: 0,
+        height: 6,
+      },
+      shadowOpacity: 0.29,
+      shadowRadius: 6.27,
+      elevation: 10
+    };
+  }
+
+  return {
+    backgroundColor: 'transparent'
+  };
 };
 
 export default HomeScreen;
