@@ -24,6 +24,20 @@
     "ios": {
       "supportsTablet": true
     },
+    "web": {
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyAtyZB6LA4SQc-lwzVXayYDboyksbTQTq8",
+          "authDomain": "in-the-gym.firebaseapp.com",
+          "databaseURL": "https://in-the-gym-default-rtdb.europe-west1.firebasedatabase.app",
+          "projectId": "in-the-gym",
+          "storageBucket": "in-the-gym.appspot.com",
+          "messagingSenderId": "416544257478",
+          "appId": "1:416544257478:web:8b1f87f9971d491ee16ec7",
+          "measurementId": "G-D751F6MQF6"
+        }
+      }
+    },
     "description": ""
   }
 }
