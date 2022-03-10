@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import ExerciseDetails from './ExerciseDetails';
@@ -14,6 +14,7 @@ const WORKOUT_STATE = {
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [workoutState, setWorkoutState] = useState(WORKOUT_STATE.INITIAL);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
   const [exitDialogEvent, triggerExitDialog] = useState(null);
   const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
 
@@ -40,14 +41,28 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
     return navigation.addListener('beforeRemove', beforeRemove);
   }, [navigation, beforeRemove]);
 
-  useKeepAwake();
+  const steps = useMemo(() => {
+    const s = [];
+    let id = 0;
 
-  const progressStateForIndex = useCallback((index) =>
+    if (exercise) {
+      s.push({ id: `${id++}`, title: 'Warm up' });
+      for (let i = 0; i < exercise.series; i++) {
+        s.push({ id: `${id++}`, title: `Serie #${i + 1}` });
+        s.push({ id: `${id++}`, title: i + 1 < exercise.series ? 'Chill' : 'Clean up' });
+      }
+    }
+    return s;
+  }, [exercise]);
+
+  const progressStateForIndex = useCallback((index, currentIndex) =>
   // eslint-disable-next-line no-nested-ternary,implicit-arrow-linebreak
-    (index === activeIndex
-      ? PROGRESS_STATE.PRESENT : index < activeIndex
+    (index === currentIndex
+      ? PROGRESS_STATE.PRESENT : index < currentIndex
         ? PROGRESS_STATE.PAST : PROGRESS_STATE.FUTURE),
-  [activeIndex]);
+  []);
+
+  useKeepAwake();
 
   if (!exercise) {
     return <View />;
@@ -77,7 +92,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
             renderItem={({ item, index }) => (
               <ProgressItem
                 title={item.title}
-                progressState={progressStateForIndex(index)}
+                progressState={progressStateForIndex(index, activeIndex)}
               />
             )}
           />
@@ -85,7 +100,21 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
         <View style={styles.detailsContainer}>
           <ExerciseDetails exercise={exercise} />
         </View>
-        <View style={styles.listContainer} />
+        <View style={styles.listContainer}>
+          <FlatList
+            data={steps}
+            extraData={stepIndex}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
+              <ProgressItem
+                title={item.title}
+                progressState={progressStateForIndex(index, stepIndex)}
+              />
+            )}
+          />
+        </View>
       </View>
       <View style={styles.inputContainer} />
       <View style={styles.statsContainer} />
