@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import ExerciseDetails from './ExerciseDetails';
-import Exercise from './Exercise';
 import ProgressItem, { PROGRESS_STATE } from './reusable/ProgressItem';
 import PopupDialog from './reusable/PopupDialog';
 
@@ -56,7 +55,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.mainContainer}>
+      <View style={styles.infoContainer}>
         <PopupDialog
           isVisible={exitDialogEvent !== null}
           title="Exit workout?"
@@ -68,14 +67,6 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
             triggerExitDialog(null);
           }}
         />
-        <Exercise
-          key={activeIndex}
-          exercise={exercise}
-          onDone={onExerciseDone}
-          onStarted={onStarted}
-        />
-      </View>
-      <View style={styles.sideContainer}>
         <View style={styles.listContainer}>
           <FlatList
             data={exercises}
@@ -94,7 +85,10 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
         <View style={styles.detailsContainer}>
           <ExerciseDetails exercise={exercise} />
         </View>
+        <View style={styles.listContainer} />
       </View>
+      <View style={styles.inputContainer} />
+      <View style={styles.statsContainer} />
     </View>
   );
 };
@@ -107,21 +101,26 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column'
   },
-  mainContainer: {
-    flex: 27
-  },
-  sideContainer: {
-    flex: 23,
-    flexDirection: 'row'
+  infoContainer: {
+    flex: 10,
+    flexDirection: 'row',
+    padding: 5
   },
   listContainer: {
-    flex: 27,
-    flexDirection: 'column',
-    paddingLeft: 10
+    flex: 1,
+    flexDirection: 'column'
   },
   detailsContainer: {
-    flex: 23,
+    flex: 1,
     flexDirection: 'column'
+  },
+  inputContainer: {
+    flex: 10,
+    padding: 5
+  },
+  statsContainer: {
+    flex: 1,
+    borderTopWidth: 1
   }
 });
 
