@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
-import ExerciseListItem from './ExerciseListItem';
 import ExerciseDetails from './ExerciseDetails';
 import Exercise from './Exercise';
+import ProgressItem, { PROGRESS_STATE } from './reusable/ProgressItem';
 import PopupDialog from './reusable/PopupDialog';
 
 const WORKOUT_STATE = {
@@ -43,6 +43,13 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
 
   useKeepAwake();
 
+  const progressStateForIndex = useCallback((index) =>
+  // eslint-disable-next-line no-nested-ternary,implicit-arrow-linebreak
+    (index === activeIndex
+      ? PROGRESS_STATE.PRESENT : index < activeIndex
+        ? PROGRESS_STATE.PAST : PROGRESS_STATE.FUTURE),
+  [activeIndex]);
+
   if (!exercise) {
     return <View />;
   }
@@ -77,10 +84,9 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item.title}
             renderItem={({ item, index }) => (
-              <ExerciseListItem
-                index={index}
-                activeIndex={activeIndex}
-                exercise={item}
+              <ProgressItem
+                title={item.title}
+                progressState={progressStateForIndex(index)}
               />
             )}
           />

@@ -2,18 +2,19 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-const ExerciseListItem = ({ index, activeIndex, exercise }) => {
+export const PROGRESS_STATE = {
+  PAST: 'past',
+  PRESENT: 'present',
+  FUTURE: 'future'
+};
+
+const ProgressItem = ({ title, progressState }) => {
   const styles = createStyles(useTheme());
 
-  // eslint-disable-next-line no-nested-ternary
-  const statusStyle = index === activeIndex
-    ? styles.present : index < activeIndex
-      ? styles.past : styles.future;
-
   return (
-    <View style={[styles.wrapper, statusStyle]}>
+    <View style={[styles.wrapper, styles[progressState]]}>
       <Text>
-        {exercise.title}
+        {title}
       </Text>
     </View>
   );
@@ -25,22 +26,21 @@ const ExerciseListItem = ({ index, activeIndex, exercise }) => {
 const createStyles = ({ colors }) => {
   const styles = {
     wrapper: {
-      width: '90%',
       height: 60,
       marginVertical: 5,
-      alignItems: 'center',
+      paddingLeft: 15,
+      alignItems: 'flex-start',
       justifyContent: 'center',
-      borderTopRightRadius: 40,
-      borderBottomRightRadius: 40
+      borderRadius: 10
     },
     past: {
       backgroundColor: colors.card
     },
     present: {
       backgroundColor: colors.primary,
-      width: '100%',
       height: 70,
-      marginVertical: 0
+      marginVertical: 0,
+      borderRadius: 5
     },
     future: {
       backgroundColor: colors.card
@@ -50,4 +50,4 @@ const createStyles = ({ colors }) => {
   return StyleSheet.create(styles);
 };
 
-export default ExerciseListItem;
+export default ProgressItem;
