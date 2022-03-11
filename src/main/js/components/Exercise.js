@@ -5,6 +5,13 @@ import {
 import { useInterval } from '../common/fun';
 import PopupDialog from './reusable/PopupDialog';
 
+export const EXERCISE_STATE = {
+  WARM_UP: 1,
+  EXERCISE: 2,
+  PAUSE: 3,
+  CLEAN_UP: 4
+};
+
 const Exercise = ({ exercise, onDone, onStarted }) => {
   const [currentSeries, setCurrentSeries] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -74,6 +81,62 @@ const Exercise = ({ exercise, onDone, onStarted }) => {
     </View>
   );
 };
+
+export const Interaction = ({
+  exercise, step, onDone, onStarted, nextStep
+}) => {
+  const startup = useCallback(() => {
+    onStarted();
+    nextStep();
+  }, [onStarted, nextStep]);
+
+  switch (step.state) {
+    case EXERCISE_STATE.WARM_UP:
+      return <WarmUp onPress={startup} />;
+    case EXERCISE_STATE.EXERCISE:
+      return (
+        <InProgress
+          execution={exercise.execution}
+          endFun={nextStep}
+        />
+      );
+    case EXERCISE_STATE.PAUSE:
+      return (
+        <CoolDown
+          from={exercise.pause}
+          endCoolDown={nextStep}
+        />
+      );
+    case EXERCISE_STATE.CLEAN_UP:
+      return (
+        <CleanUp onPress={onDone} />
+      );
+    default:
+      return null;
+  }
+};
+
+const WarmUp = ({ onPress }) => (
+  <View style={styles.exercise}>
+    <Pressable
+      onPress={onPress}
+      style={pressable}
+    >
+      <Text style={styles.pressTxt}>START</Text>
+    </Pressable>
+  </View>
+);
+
+const CleanUp = ({ onPress }) => (
+  <View style={styles.exercise}>
+    <Pressable
+      onPress={onPress}
+      style={pressable}
+    >
+      <Text style={styles.pressTxt}>EXIT</Text>
+    </Pressable>
+  </View>
+);
 
 const CoolDown = ({ from, endCoolDown }) => {
   const [count, setCount] = useState(from);

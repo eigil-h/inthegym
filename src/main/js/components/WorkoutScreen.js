@@ -1,6 +1,9 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {
+  useEffect, useState, useCallback, useMemo
+} from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
+import { EXERCISE_STATE, Interaction } from './Exercise';
 import ExerciseDetails from './ExerciseDetails';
 import ProgressItem, { PROGRESS_STATE } from './reusable/ProgressItem';
 import PopupDialog from './reusable/PopupDialog';
@@ -27,6 +30,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
       setTimeout(navigation.goBack, 0);
     } else {
       setActiveIndex((prevState) => prevState + 1);
+      setStepIndex(0);
     }
   }, [activeIndex, exercises, navigation]);
 
@@ -44,16 +48,23 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const steps = useMemo(() => {
     const s = [];
     let id = 0;
+    const mkStep = (i, t, es) => ({ id: i, title: t, state: es });
 
     if (exercise) {
-      s.push({ id: `${id++}`, title: 'Warm up' });
+      s.push(mkStep(`${id++}`, 'Warm up', EXERCISE_STATE.WARM_UP));
       for (let i = 0; i < exercise.series; i++) {
-        s.push({ id: `${id++}`, title: `Serie #${i + 1}` });
-        s.push({ id: `${id++}`, title: i + 1 < exercise.series ? 'Chill' : 'Clean up' });
+        s.push(mkStep(`${id++}`, `Serie #${i + 1}`, EXERCISE_STATE.EXERCISE));
+        if (i + 1 < exercise.series) {
+          s.push(mkStep(`${id++}`, 'Chill', EXERCISE_STATE.PAUSE));
+        } else {
+          s.push(mkStep(`${id++}`, 'Clean up', EXERCISE_STATE.CLEAN_UP));
+        }
       }
     }
     return s;
   }, [exercise]);
+
+  const nextStep = useCallback(() => setStepIndex((prev) => prev + 1), [setStepIndex]);
 
   const progressStateForIndex = useCallback((index, currentIndex) =>
   // eslint-disable-next-line no-nested-ternary,implicit-arrow-linebreak
@@ -116,7 +127,15 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
           />
         </View>
       </View>
-      <View style={styles.inputContainer} />
+      <View style={styles.inputContainer}>
+        <Interaction
+          exercise={exercise}
+          step={steps[stepIndex]}
+          onDone={onExerciseDone}
+          onStarted={onStarted}
+          nextStep={nextStep}
+        />
+      </View>
       <View style={styles.statsContainer} />
     </View>
   );
