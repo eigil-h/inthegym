@@ -47,17 +47,16 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
 
   const steps = useMemo(() => {
     const s = [];
-    let id = 0;
-    const mkStep = (i, t, es) => ({ id: i, title: t, state: es });
+    const mkStep = (t, es) => ({ title: t, state: es });
 
     if (exercise) {
-      s.push(mkStep(`${id++}`, 'Warm up', EXERCISE_STATE.WARM_UP));
+      s.push(mkStep('Warm up', EXERCISE_STATE.WARM_UP));
       for (let i = 0; i < exercise.series; i++) {
-        s.push(mkStep(`${id++}`, `Serie #${i + 1}`, EXERCISE_STATE.EXERCISE));
+        s.push(mkStep(`Serie #${i + 1}`, EXERCISE_STATE.EXERCISE));
         if (i + 1 < exercise.series) {
-          s.push(mkStep(`${id++}`, 'Chill', EXERCISE_STATE.PAUSE));
+          s.push(mkStep('Chill', EXERCISE_STATE.PAUSE));
         } else {
-          s.push(mkStep(`${id++}`, 'Clean up', EXERCISE_STATE.CLEAN_UP));
+          s.push(mkStep('Clean up', EXERCISE_STATE.CLEAN_UP));
         }
       }
     }

@@ -19,7 +19,7 @@ const ProgressList = ({ elements, activeIndex }) => {
         extraData={activeIndex}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(item, index) => `${index}`}
         renderItem={({ item, index }) => (
           <ProgressItem
             title={item.title}
