@@ -27,11 +27,21 @@ const Units = ({ exercise }) => (
 );
 
 const AmountsText = ({ text }) => (
-  <Text style={styles.amountsText}>{text}</Text>
+  <Text
+    style={styles.amountsText}
+    numberOfLines={1}
+  >
+    {text}
+  </Text>
 );
 
 const UnitsText = ({ text }) => (
-  <Text style={styles.unitsText}>{text}</Text>
+  <Text
+    style={styles.unitsText}
+    numberOfLines={1}
+  >
+    {text}
+  </Text>
 );
 
 /*
@@ -45,13 +55,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   amounts: {
-    flex: 1,
+    flex: 3,
     flexDirection: 'column',
     padding: 5,
     justifyContent: 'space-evenly'
   },
   units: {
-    flex: 1,
+    flex: 4,
     flexDirection: 'column',
     padding: 5,
     justifyContent: 'space-evenly',
