@@ -1,12 +1,12 @@
 import React, {
   useEffect, useState, useCallback, useMemo
 } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import { EXERCISE_STATE, Interaction } from './Exercise';
 import ExerciseDetails from './ExerciseDetails';
-import ProgressItem, { PROGRESS_STATE } from './reusable/ProgressItem';
 import PopupDialog from './reusable/PopupDialog';
+import ProgressList from './reusable/ProgressList';
 
 const WORKOUT_STATE = {
   INITIAL: 1,
@@ -66,13 +66,6 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
 
   const nextStep = useCallback(() => setStepIndex((prev) => prev + 1), [setStepIndex]);
 
-  const progressStateForIndex = useCallback((index, currentIndex) =>
-  // eslint-disable-next-line no-nested-ternary,implicit-arrow-linebreak
-    (index === currentIndex
-      ? PROGRESS_STATE.PRESENT : index < currentIndex
-        ? PROGRESS_STATE.PAST : PROGRESS_STATE.FUTURE),
-  []);
-
   useKeepAwake();
 
   if (!exercise) {
@@ -93,39 +86,17 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
             triggerExitDialog(null);
           }}
         />
-        <View style={styles.listContainer}>
-          <FlatList
-            data={exercises}
-            extraData={activeIndex}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.title}
-            renderItem={({ item, index }) => (
-              <ProgressItem
-                title={item.title}
-                progressState={progressStateForIndex(index, activeIndex)}
-              />
-            )}
-          />
-        </View>
+        <ProgressList
+          elements={exercises}
+          activeIndex={activeIndex}
+        />
         <View style={styles.detailsContainer}>
           <ExerciseDetails exercise={exercise} />
         </View>
-        <View style={styles.listContainer}>
-          <FlatList
-            data={steps}
-            extraData={stepIndex}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index }) => (
-              <ProgressItem
-                title={item.title}
-                progressState={progressStateForIndex(index, stepIndex)}
-              />
-            )}
-          />
-        </View>
+        <ProgressList
+          elements={steps}
+          activeIndex={stepIndex}
+        />
       </View>
       <View style={styles.inputContainer}>
         <Interaction
@@ -153,10 +124,6 @@ const styles = StyleSheet.create({
     flex: 10,
     flexDirection: 'row',
     padding: 5
-  },
-  listContainer: {
-    flex: 1,
-    flexDirection: 'column'
   },
   detailsContainer: {
     flex: 1,
