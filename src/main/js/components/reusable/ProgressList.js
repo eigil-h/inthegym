@@ -1,16 +1,18 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import ProgressItem, { PROGRESS_STATE } from './ProgressItem';
 
 const ProgressList = ({ elements, activeIndex }) => {
   const ref = useRef(null);
-
   const progressStateForIndex = useCallback((index, currentIndex) =>
   // eslint-disable-next-line no-nested-ternary,implicit-arrow-linebreak
     (index === currentIndex
       ? PROGRESS_STATE.PRESENT : index < currentIndex
         ? PROGRESS_STATE.PAST : PROGRESS_STATE.FUTURE),
   []);
+
+  useEffect(() => ref.current.scrollToIndex({ index: activeIndex, viewPosition: 1 }),
+    [ref, activeIndex]);
 
   return (
     <View style={styles.listContainer}>
@@ -24,6 +26,7 @@ const ProgressList = ({ elements, activeIndex }) => {
           <ProgressItem
             title={item.title}
             progressState={progressStateForIndex(index, activeIndex)}
+            scrollRef={ref}
           />
         )}
         ref={ref}
