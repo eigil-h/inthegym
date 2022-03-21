@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
-import { EXERCISE_STATE, Interaction } from './Exercise';
+import Interaction, { EXERCISE_STATE } from './Interaction';
 import ExerciseDetails from './ExerciseDetails';
 import PopupDialog from './reusable/PopupDialog';
 import ProgressList from './reusable/ProgressList';

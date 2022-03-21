@@ -23,7 +23,8 @@
     "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12",
     "expo-constants": "~11.0.1",
-    "expo-keep-awake": "~9.2.0"
+    "expo-keep-awake": "~9.2.0",
+    "expo-linear-gradient": "~9.2.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
