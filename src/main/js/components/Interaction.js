@@ -18,7 +18,8 @@ const Interaction = ({
   step,
   onDone,
   onStarted,
-  nextStep
+  nextStep,
+  setInstruction
 }) => {
   const theme = useTheme();
   const { colors } = theme;
@@ -42,6 +43,7 @@ const Interaction = ({
             execution={exercise.execution}
             endFun={nextStep}
             styles={styles}
+            setInstruction={setInstruction}
           />
         );
       case EXERCISE_STATE.PAUSE:
@@ -50,6 +52,7 @@ const Interaction = ({
             from={exercise.pause}
             endCoolDown={nextStep}
             styles={styles}
+            setInstruction={setInstruction}
           />
         );
       case EXERCISE_STATE.CLEAN_UP:
@@ -62,7 +65,7 @@ const Interaction = ({
       default:
         return null;
     }
-  }, [exercise, nextStep, onDone, onStarted, step.state, styles]);
+  }, [exercise, nextStep, onDone, onStarted, setInstruction, step.state, styles]);
 
   return (
     <LinearGradient
@@ -89,7 +92,12 @@ const ForwardButton = ({ onPress, styles }) => (
   </Pressable>
 );
 
-const CoolDown = ({ from, endCoolDown, styles }) => {
+const CoolDown = ({
+  from,
+  endCoolDown,
+  styles,
+  setInstruction
+}) => {
   const [count, setCount] = useState(from);
   const [isEndDialog, showEndDialog] = useState(false);
   const triggerEndDialog = useCallback(() => showEndDialog(true), []);
@@ -100,12 +108,16 @@ const CoolDown = ({ from, endCoolDown, styles }) => {
   }, 1000);
 
   useEffect(() => {
+    setInstruction({
+      msg: 'Cool down until time out',
+      count: `${new Date(count * 1000).toISOString().substr(15, 4)}`,
+      estate: EXERCISE_STATE.PAUSE
+    });
+
     if (count === 0) {
       endCoolDown();
     }
-  }, [count, endCoolDown]);
-
-  //           {new Date(count * 1000).toISOString().substr(15, 4)}
+  }, [count, endCoolDown, setInstruction]);
 
   return (
     <>
@@ -127,7 +139,8 @@ const CoolDown = ({ from, endCoolDown, styles }) => {
 const InProgress = ({
   execution: { unit, amount },
   endFun,
-  styles
+  styles,
+  setInstruction
 }) => {
   const isCountDown = unit === 'seconds';
   const crement = isCountDown ? -1 : 1;
@@ -141,10 +154,16 @@ const InProgress = ({
   }, 1000);
 
   useEffect(() => {
+    setInstruction({
+      msg: `Do your stuff with ${amount} ${unit}`,
+      count: `${new Date(count * 1000).toISOString().substr(15, 4)}`,
+      estate: EXERCISE_STATE.EXERCISE
+    });
+
     if (isCountDown && count === 0) {
       endFun();
     }
-  }, [count, endFun, isCountDown]);
+  }, [amount, count, endFun, isCountDown, setInstruction, unit]);
 
   return (
     <>
@@ -161,13 +180,6 @@ const InProgress = ({
       />
     </>
   );
-
-  /*
-        <Text style={isCountDown ? styles.pressTxt : styles.countUp}>
-          {new Date(count * 1000).toISOString().substr(15, 4)}
-        </Text>
-        <Text style={isCountDown ? styles.countUp : styles.pressTxt}>NEXT</Text>
- */
 };
 
 /*

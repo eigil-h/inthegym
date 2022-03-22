@@ -7,6 +7,7 @@ import Interaction, { EXERCISE_STATE } from './Interaction';
 import ExerciseDetails from './ExerciseDetails';
 import PopupDialog from './reusable/PopupDialog';
 import ProgressList from './reusable/ProgressList';
+import Instruction from './Instruction';
 
 const WORKOUT_STATE = {
   INITIAL: 1,
@@ -18,6 +19,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [workoutState, setWorkoutState] = useState(WORKOUT_STATE.INITIAL);
   const [activeIndex, setActiveIndex] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
+  const [instruction, setInstruction] = useState({ msg: 'Welcome!' });
   const [exitDialogEvent, triggerExitDialog] = useState(null);
   const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
 
@@ -73,18 +75,18 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
 
   return (
     <View style={styles.screen}>
+      <PopupDialog
+        isVisible={exitDialogEvent !== null}
+        title="Exit workout?"
+        message="You have not completed the workout. Progress will be lost!"
+        onConfirm={() => {
+          navigation.dispatch(exitDialogEvent.data.action);
+        }}
+        onCancel={() => {
+          triggerExitDialog(null);
+        }}
+      />
       <View style={styles.infoContainer}>
-        <PopupDialog
-          isVisible={exitDialogEvent !== null}
-          title="Exit workout?"
-          message="You have not completed the workout. Progress will be lost!"
-          onConfirm={() => {
-            navigation.dispatch(exitDialogEvent.data.action);
-          }}
-          onCancel={() => {
-            triggerExitDialog(null);
-          }}
-        />
         <ProgressList
           elements={exercises}
           activeIndex={activeIndex}
@@ -97,6 +99,9 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
           activeIndex={stepIndex}
         />
       </View>
+      <View style={styles.instructionContainer}>
+        <Instruction instruction={instruction} />
+      </View>
       <View style={styles.inputContainer}>
         <Interaction
           exercise={exercise}
@@ -104,6 +109,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
           onDone={onExerciseDone}
           onStarted={onStarted}
           nextStep={nextStep}
+          setInstruction={setInstruction}
         />
       </View>
       <View style={styles.statsContainer} />
@@ -124,17 +130,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 5
   },
+  instructionContainer: {
+    flex: 2
+  },
   detailsContainer: {
     flex: 1,
     flexDirection: 'column'
   },
   inputContainer: {
-    flex: 10,
+    flex: 8,
     padding: 5
   },
   statsContainer: {
-    flex: 1,
-    borderTopWidth: 1
+    flex: 1
   }
 });
 
