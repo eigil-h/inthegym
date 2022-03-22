@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useInterval } from '../common/fun';
 import PopupDialog from './reusable/PopupDialog';
@@ -32,7 +33,7 @@ const Interaction = ({
     switch (step.state) {
       case EXERCISE_STATE.WARM_UP:
         return (
-          <WarmUp
+          <Simple
             onPress={startup}
             styles={styles}
           />
@@ -55,7 +56,7 @@ const Interaction = ({
         );
       case EXERCISE_STATE.CLEAN_UP:
         return (
-          <CleanUp
+          <Simple
             onPress={onDone}
             styles={styles}
           />
@@ -76,21 +77,17 @@ const Interaction = ({
   );
 };
 
-const WarmUp = ({ onPress, styles }) => (
+const Simple = ({ onPress, styles }) => (
   <Pressable
     onPress={onPress}
-    style={pressable(useTheme())}
+    style={pressableStyle}
   >
-    <Text style={styles.pressTxt}>START</Text>
-  </Pressable>
-);
-
-const CleanUp = ({ onPress, styles }) => (
-  <Pressable
-    onPress={onPress}
-    style={pressable(useTheme())}
-  >
-    <Text style={styles.pressTxt}>EXIT</Text>
+    {({ pressed }) => (
+      <Ionicons
+        name="arrow-forward"
+        style={[styles.pressTxt, pressed ? styles.pressedTxt : null]}
+      />
+    )}
   </Pressable>
 );
 
@@ -108,6 +105,8 @@ const CoolDown = ({ from, endCoolDown, styles }) => {
     }
   }, [count, endCoolDown]);
 
+  //           {new Date(count * 1000).toISOString().substr(15, 4)}
+
   return (
     <>
       <PopupDialog
@@ -123,11 +122,14 @@ const CoolDown = ({ from, endCoolDown, styles }) => {
         onPress={() => {
           showEndDialog(true);
         }}
-        style={pressable(useTheme())}
+        style={pressableStyle}
       >
-        <Text style={styles.pressTxt}>
-          {new Date(count * 1000).toISOString().substr(15, 4)}
-        </Text>
+        {({ pressed }) => (
+          <Ionicons
+            name="arrow-forward"
+            style={[styles.pressTxt, pressed ? styles.pressedTxt : null]}
+          />
+        )}
       </Pressable>
     </>
   );
@@ -136,7 +138,6 @@ const CoolDown = ({ from, endCoolDown, styles }) => {
 const InProgress = ({
   execution: { unit, amount },
   endFun,
-  isLast,
   styles
 }) => {
   const isCountDown = unit === 'seconds';
@@ -168,15 +169,24 @@ const InProgress = ({
       />
       <Pressable
         onPress={isCountDown ? triggerEndDialog : endFun}
-        style={pressable(useTheme())}
+        style={pressableStyle}
       >
-        <Text style={isCountDown ? styles.pressTxt : styles.countUp}>
-          {new Date(count * 1000).toISOString().substr(15, 4)}
-        </Text>
-        <Text style={isCountDown ? styles.countUp : styles.pressTxt}>{isLast ? 'DONE' : 'PAUSE'}</Text>
+        {({ pressed }) => (
+          <Ionicons
+            name="arrow-forward"
+            style={[styles.pressTxt, pressed ? styles.pressedTxt : null]}
+          />
+        )}
       </Pressable>
     </>
   );
+
+  /*
+        <Text style={isCountDown ? styles.pressTxt : styles.countUp}>
+          {new Date(count * 1000).toISOString().substr(15, 4)}
+        </Text>
+        <Text style={isCountDown ? styles.countUp : styles.pressTxt}>NEXT</Text>
+ */
 };
 
 /*
@@ -185,9 +195,12 @@ const InProgress = ({
 const createStyles = ({ colors }) => {
   const styles = {
     pressTxt: {
-      color: colors.text,
-      textAlign: 'center',
-      fontSize: 56
+      color: colors.background,
+      fontSize: 156,
+      textAlign: 'center'
+    },
+    pressedTxt: {
+      color: colors.text
     },
     fill: {
       ...StyleSheet.absoluteFillObject
@@ -217,12 +230,9 @@ const createStyles = ({ colors }) => {
   return StyleSheet.create(styles);
 };
 
-const pressable = ({ colors }) => ({ pressed }) => [{
+const pressableStyle = () => [{
   flex: 1,
-  marginVertical: '10%',
-  backgroundColor: pressed
-    ? colors.primary
-    : colors.card
+  justifyContent: 'center'
 }];
 
 export default Interaction;
