@@ -25,16 +25,14 @@ const Interaction = ({
   const styles = createStyles(theme);
 
   const forState = useCallback(() => {
-    const startup = () => {
-      onStarted();
-      nextStep();
-    };
-
     switch (step.state) {
       case EXERCISE_STATE.WARM_UP:
         return (
-          <Simple
-            onPress={startup}
+          <ForwardButton
+            onPress={() => {
+              onStarted();
+              nextStep();
+            }}
             styles={styles}
           />
         );
@@ -56,7 +54,7 @@ const Interaction = ({
         );
       case EXERCISE_STATE.CLEAN_UP:
         return (
-          <Simple
+          <ForwardButton
             onPress={onDone}
             styles={styles}
           />
@@ -77,7 +75,7 @@ const Interaction = ({
   );
 };
 
-const Simple = ({ onPress, styles }) => (
+const ForwardButton = ({ onPress, styles }) => (
   <Pressable
     onPress={onPress}
     style={pressableStyle}
@@ -85,7 +83,7 @@ const Simple = ({ onPress, styles }) => (
     {({ pressed }) => (
       <Ionicons
         name="arrow-forward"
-        style={[styles.pressTxt, pressed ? styles.pressedTxt : null]}
+        style={[styles.pressIcon, pressed ? styles.pressedIcon : null]}
       />
     )}
   </Pressable>
@@ -94,6 +92,8 @@ const Simple = ({ onPress, styles }) => (
 const CoolDown = ({ from, endCoolDown, styles }) => {
   const [count, setCount] = useState(from);
   const [isEndDialog, showEndDialog] = useState(false);
+  const triggerEndDialog = useCallback(() => showEndDialog(true), []);
+  const cancelHandler = useCallback(() => showEndDialog(false), []);
 
   useInterval(() => {
     setCount((prev) => prev - 1);
@@ -114,23 +114,12 @@ const CoolDown = ({ from, endCoolDown, styles }) => {
         title="Continue already?"
         message="The pause is important for maximum workout effect"
         onConfirm={endCoolDown}
-        onCancel={() => {
-          showEndDialog(false);
-        }}
+        onCancel={cancelHandler}
       />
-      <Pressable
-        onPress={() => {
-          showEndDialog(true);
-        }}
-        style={pressableStyle}
-      >
-        {({ pressed }) => (
-          <Ionicons
-            name="arrow-forward"
-            style={[styles.pressTxt, pressed ? styles.pressedTxt : null]}
-          />
-        )}
-      </Pressable>
+      <ForwardButton
+        onPress={triggerEndDialog}
+        styles={styles}
+      />
     </>
   );
 };
@@ -145,6 +134,7 @@ const InProgress = ({
   const [count, setCount] = useState(isCountDown ? amount : 0);
   const [isEndDialog, showEndDialog] = useState(false);
   const triggerEndDialog = useCallback(() => showEndDialog(true), []);
+  const cancelHandler = useCallback(() => showEndDialog(false), []);
 
   useInterval(() => {
     setCount((prev) => prev + crement);
@@ -163,21 +153,12 @@ const InProgress = ({
         title="Abort?"
         message={`Still ${count} seconds to go!`}
         onConfirm={endFun}
-        onCancel={() => {
-          showEndDialog(false);
-        }}
+        onCancel={cancelHandler}
       />
-      <Pressable
+      <ForwardButton
         onPress={isCountDown ? triggerEndDialog : endFun}
-        style={pressableStyle}
-      >
-        {({ pressed }) => (
-          <Ionicons
-            name="arrow-forward"
-            style={[styles.pressTxt, pressed ? styles.pressedTxt : null]}
-          />
-        )}
-      </Pressable>
+        styles={styles}
+      />
     </>
   );
 
@@ -194,12 +175,12 @@ const InProgress = ({
  */
 const createStyles = ({ colors }) => {
   const styles = {
-    pressTxt: {
+    pressIcon: {
       color: colors.background,
       fontSize: 156,
       textAlign: 'center'
     },
-    pressedTxt: {
+    pressedIcon: {
       color: colors.text
     },
     fill: {
