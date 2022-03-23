@@ -130,7 +130,7 @@ const CoolDown = ({
   const cancelHandler = useCallback(() => showEndDialog(false), []);
 
   useInterval(() => {
-    setCount((prev) => prev - 1);
+    setCount((prev) => (prev > 0 ? prev - 1 : 0));
   }, 1000);
 
   useEffect(() => {
@@ -139,11 +139,7 @@ const CoolDown = ({
       count: `${new Date(count * 1000).toISOString().substr(15, 4)}`,
       estate: EXERCISE_STATE.PAUSE
     });
-
-    if (count === 0) {
-      endCoolDown();
-    }
-  }, [count, endCoolDown, setInstruction]);
+  }, [count, setInstruction]);
 
   return (
     <>
@@ -155,7 +151,7 @@ const CoolDown = ({
         onCancel={cancelHandler}
       />
       <ForwardButton
-        onPress={triggerEndDialog}
+        onPress={count > 0 ? triggerEndDialog : endCoolDown}
         styles={styles}
       />
     </>
@@ -177,7 +173,7 @@ const InProgress = ({
   const cancelHandler = useCallback(() => showEndDialog(false), []);
 
   useInterval(() => {
-    setCount((prev) => prev + crement);
+    setCount((prev) => (isCountDown && prev === 0 ? 0 : prev + crement));
   }, 1000);
 
   useEffect(() => {
@@ -186,11 +182,7 @@ const InProgress = ({
       count: `${new Date(count * 1000).toISOString().substr(15, 4)}`,
       estate: EXERCISE_STATE.EXERCISE
     });
-
-    if (isCountDown && count === 0) {
-      endFun();
-    }
-  }, [count, endFun, execution, isCountDown, load, setInstruction]);
+  }, [count, execution, load, setInstruction]);
 
   return (
     <>
@@ -202,7 +194,7 @@ const InProgress = ({
         onCancel={cancelHandler}
       />
       <ForwardButton
-        onPress={isCountDown ? triggerEndDialog : endFun}
+        onPress={isCountDown && count > 0 ? triggerEndDialog : endFun}
         styles={styles}
       />
     </>
