@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { EXERCISE_STATE } from './Interaction';
 
 const Instruction = ({
   instruction: {
@@ -9,13 +10,13 @@ const Instruction = ({
     estate
   }
 }) => {
-  const styles = createStyles(useTheme());
+  const styles = createStyles(estate, useTheme());
   return (
     <View style={styles.wrapper}>
       <View style={styles.msgBox}>
         <Text
           style={styles.msg}
-          numberOfLines={1}
+          numberOfLines={2}
         >
           {msg}
         </Text>
@@ -23,7 +24,6 @@ const Instruction = ({
       <View style={styles.countBox}>
         <Text
           style={styles.count}
-          numberOfLines={1}
         >
           {count}
         </Text>
@@ -32,26 +32,33 @@ const Instruction = ({
   );
 };
 
-const createStyles = ({ colors }) => {
+const createStyles = (estate, { colors }) => {
+  const countColor = estate === EXERCISE_STATE.PAUSE ? colors.notification : colors.text;
   const styles = {
     wrapper: {
+      ...StyleSheet.absoluteFillObject,
       flexDirection: 'row',
-      paddingLeft: 5,
-      paddingTop: 15
+      borderColor: 'red',
+      alignItems: 'center'
     },
     msgBox: {
-      flex: 3
+      flex: 5,
+      paddingHorizontal: 8
     },
     msg: {
       fontSize: 22,
-      lineHeight: 27
     },
     countBox: {
-      flex: 1
+      flex: 2,
+      borderWidth: 1,
+      borderRadius: 8,
+      marginRight: 8
     },
     count: {
-      fontSize: 28,
-      lineHeight: 28
+      color: countColor,
+      fontSize: 44,
+      fontWeight: 'bold',
+      textAlign: 'center'
     }
   };
 

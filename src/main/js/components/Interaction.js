@@ -29,18 +29,21 @@ const Interaction = ({
     switch (step.state) {
       case EXERCISE_STATE.WARM_UP:
         return (
-          <ForwardButton
+          <MessageOnly
             onPress={() => {
               onStarted();
               nextStep();
             }}
             styles={styles}
+            setInstruction={setInstruction}
+            instructionMsg={`Please start with "${exercise.title}" warmup!`}
           />
         );
       case EXERCISE_STATE.EXERCISE:
         return (
           <InProgress
             execution={exercise.execution}
+            load={exercise.load}
             endFun={nextStep}
             styles={styles}
             setInstruction={setInstruction}
@@ -57,9 +60,11 @@ const Interaction = ({
         );
       case EXERCISE_STATE.CLEAN_UP:
         return (
-          <ForwardButton
+          <MessageOnly
             onPress={onDone}
             styles={styles}
+            setInstruction={setInstruction}
+            instructionMsg={`Now, please clean up "${exercise.title}". Thanks!`}
           />
         );
       default:
@@ -92,6 +97,27 @@ const ForwardButton = ({ onPress, styles }) => (
   </Pressable>
 );
 
+const MessageOnly = ({
+  onPress,
+  styles,
+  setInstruction,
+  instructionMsg
+}) => {
+  useEffect(() => {
+    setInstruction({
+      msg: instructionMsg,
+      count: ''
+    });
+  }, [setInstruction, instructionMsg]);
+
+  return (
+    <ForwardButton
+      onPress={onPress}
+      styles={styles}
+    />
+  );
+};
+
 const CoolDown = ({
   from,
   endCoolDown,
@@ -109,7 +135,7 @@ const CoolDown = ({
 
   useEffect(() => {
     setInstruction({
-      msg: 'Cool down until time out',
+      msg: 'Chill until timer times out',
       count: `${new Date(count * 1000).toISOString().substr(15, 4)}`,
       estate: EXERCISE_STATE.PAUSE
     });
@@ -137,14 +163,15 @@ const CoolDown = ({
 };
 
 const InProgress = ({
-  execution: { unit, amount },
+  execution,
+  load,
   endFun,
   styles,
   setInstruction
 }) => {
-  const isCountDown = unit === 'seconds';
+  const isCountDown = execution.unit === 'seconds';
   const crement = isCountDown ? -1 : 1;
-  const [count, setCount] = useState(isCountDown ? amount : 0);
+  const [count, setCount] = useState(isCountDown ? execution.amount : 0);
   const [isEndDialog, showEndDialog] = useState(false);
   const triggerEndDialog = useCallback(() => showEndDialog(true), []);
   const cancelHandler = useCallback(() => showEndDialog(false), []);
@@ -155,7 +182,7 @@ const InProgress = ({
 
   useEffect(() => {
     setInstruction({
-      msg: `Do your stuff with ${amount} ${unit}`,
+      msg: `Do ${execution.amount} ${execution.unit} with ${load.amount} ${load.unit}`,
       count: `${new Date(count * 1000).toISOString().substr(15, 4)}`,
       estate: EXERCISE_STATE.EXERCISE
     });
@@ -163,7 +190,7 @@ const InProgress = ({
     if (isCountDown && count === 0) {
       endFun();
     }
-  }, [amount, count, endFun, isCountDown, setInstruction, unit]);
+  }, [count, endFun, execution, isCountDown, load, setInstruction]);
 
   return (
     <>

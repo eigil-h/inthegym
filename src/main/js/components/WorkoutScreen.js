@@ -19,7 +19,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [workoutState, setWorkoutState] = useState(WORKOUT_STATE.INITIAL);
   const [activeIndex, setActiveIndex] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
-  const [instruction, setInstruction] = useState({ msg: 'Welcome!' });
+  const [instruction, setInstruction] = useState({});
   const [exitDialogEvent, triggerExitDialog] = useState(null);
   const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
 
