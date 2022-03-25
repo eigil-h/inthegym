@@ -1,16 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { EXERCISE_STATE } from './Interaction';
 
 const Instruction = ({
   instruction: {
     msg,
     count,
-    estate
+    countColor
   }
 }) => {
-  const styles = createStyles(estate, useTheme());
+  const styles = createStyles(countColor);
   return (
     <View style={styles.wrapper}>
       <View style={styles.msgBox}>
@@ -32,8 +30,7 @@ const Instruction = ({
   );
 };
 
-const createStyles = (estate, { colors }) => {
-  const countColor = estate === EXERCISE_STATE.PAUSE ? colors.notification : colors.text;
+const createStyles = (countColor) => {
   const styles = {
     wrapper: {
       ...StyleSheet.absoluteFillObject,

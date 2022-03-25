@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
-import Interaction, { EXERCISE_STATE } from './Interaction';
+import Steps, { mkSteps } from './Steps';
 import ExerciseDetails from './ExerciseDetails';
 import PopupDialog from './reusable/PopupDialog';
 import ProgressList from './reusable/ProgressList';
@@ -47,24 +47,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
     return navigation.addListener('beforeRemove', beforeRemove);
   }, [navigation, beforeRemove]);
 
-  const steps = useMemo(() => {
-    const s = [];
-    const mkStep = (t, es) => ({ title: t, state: es });
-
-    if (exercise) {
-      s.push(mkStep('Warm up', EXERCISE_STATE.WARM_UP));
-      for (let i = 0; i < exercise.series; i++) {
-        s.push(mkStep(`Serie #${i + 1}`, EXERCISE_STATE.EXERCISE));
-        if (i + 1 < exercise.series) {
-          s.push(mkStep('Chill', EXERCISE_STATE.PAUSE));
-        } else {
-          s.push(mkStep('Clean up', EXERCISE_STATE.CLEAN_UP));
-        }
-      }
-    }
-    return s;
-  }, [exercise]);
-
+  const steps = useMemo(() => mkSteps(exercise), [exercise]);
   const nextStep = useCallback(() => setStepIndex((prev) => prev + 1), [setStepIndex]);
 
   useKeepAwake();
@@ -103,7 +86,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
         <Instruction instruction={instruction} />
       </View>
       <View style={styles.inputContainer}>
-        <Interaction
+        <Steps
           exercise={exercise}
           step={steps[stepIndex]}
           onDone={onExerciseDone}
