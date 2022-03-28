@@ -26,7 +26,8 @@ module.exports = {
     'react-native/no-raw-text': 2,
     'react-native/no-single-element-style-arrays': 2,
     'no-plusplus': 'off',
-    'no-nested-ternary': 'off'
+    'no-nested-ternary': 'off',
+    'max-len': ['warn', { code: 120 }]
   },
   globals: {
     fetch: false

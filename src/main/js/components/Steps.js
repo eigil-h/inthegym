@@ -58,8 +58,7 @@ const Step = ({
   const {
     execution,
     load,
-    pause,
-    title
+    pause
   } = exercise;
   const { state: stepState } = step;
 
@@ -76,29 +75,30 @@ const Step = ({
   }, [step, stepState, pause, execution]);
 
   useEffect(() => {
-    const instructionData = {
-      countColor: stepState === EXERCISE_STATE.PAUSE ? colors.notification : colors.text
-    };
+    const instructionData = {};
     if (count !== null) {
       instructionData.count = `${new Date(count * 1000).toISOString().substr(15, 4)}`;
+      instructionData.countColor = count === 0 ? colors.notification : colors.text;
     }
     switch (stepState) {
       case EXERCISE_STATE.WARM_UP:
-        instructionData.msg = `Please start with "${title}" warmup!`;
+        instructionData.msg = 'Warmup! Press forward button when ready';
         break;
       case EXERCISE_STATE.EXERCISE:
-        instructionData.msg = `Do ${execution.amount} ${execution.unit} with ${load.amount} ${load.unit}`;
+        instructionData.msg = count === 0 ? 'Press forward button to continue'
+          : `Do ${execution.amount} ${execution.unit} with ${load.amount} ${load.unit}`
+          + `${count === null ? '. Press forward button after last repeat' : ''}`;
         break;
       case EXERCISE_STATE.PAUSE:
-        instructionData.msg = 'Chill until timer times out';
+        instructionData.msg = count === 0 ? 'Press forward button to continue' : 'Chill until timer times out';
         break;
       case EXERCISE_STATE.CLEAN_UP:
-        instructionData.msg = `Now, please clean up "${title}". Thanks!`;
+        instructionData.msg = 'Now, please clean up! Press forward button when done';
         break;
       default:
     }
     setInstruction(instructionData);
-  }, [colors, count, execution, exercise, load, setInstruction, stepState, title]);
+  }, [colors, count, execution, exercise, load, setInstruction, stepState]);
 
   useInterval(() => {
     if (count) {
@@ -111,7 +111,8 @@ const Step = ({
       <PopupDialog
         isVisible={isEndDialog}
         title={stepState === EXERCISE_STATE.EXERCISE ? 'Abort?' : 'Continue already?'}
-        message={stepState === EXERCISE_STATE.EXERCISE ? `Still ${count} seconds to go!` : `Still ${count} seconds to go!`}
+        message={stepState === EXERCISE_STATE.EXERCISE
+          ? `Still ${count} seconds to go!` : `Still ${count} seconds to go!`}
         onConfirm={nextStep}
         onCancel={cancelHandler}
       />
