@@ -14,7 +14,7 @@ const Instruction = ({
       <View style={styles.msgBox}>
         <Text
           style={styles.msg}
-          numberOfLines={2}
+          numberOfLines={3}
         >
           {msg}
         </Text>
@@ -46,14 +46,14 @@ const createStyles = (countColor) => {
       fontSize: 22,
     },
     countBox: {
-      flex: 2,
+      flex: 3,
       borderWidth: 1,
       borderRadius: 8,
       marginRight: 8
     },
     count: {
       color: countColor,
-      fontSize: 44,
+      fontSize: 66,
       fontWeight: 'bold',
       textAlign: 'center'
     }

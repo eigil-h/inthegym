@@ -109,12 +109,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   infoContainer: {
-    flex: 10,
+    flex: 9,
     flexDirection: 'row',
     padding: 5
   },
   instructionContainer: {
-    flex: 2
+    flex: 3
   },
   detailsContainer: {
     flex: 1,
