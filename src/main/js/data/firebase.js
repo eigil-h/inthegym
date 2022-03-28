@@ -39,7 +39,7 @@ const testData = {
     {
       description: 'workout test time',
       execution: {
-        amount: 10,
+        amount: 8,
         unit: 'seconds',
       },
       load: {

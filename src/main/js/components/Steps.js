@@ -69,13 +69,9 @@ const Step = ({
   const cancelHandler = useCallback(() => showEndDialog(false), []);
 
   useEffect(() => {
-    // eslint-disable-next-line no-nested-ternary
-    const initialCount = () => {
-      if (stepState === EXERCISE_STATE.PAUSE) return pause;
-      if (stepState === EXERCISE_STATE.EXERCISE && execution.unit === 'seconds') return execution.amount;
-      return null;
-    };
-    setCount(initialCount());
+    setCount(stepState === EXERCISE_STATE.PAUSE ? pause
+      : (stepState === EXERCISE_STATE.EXERCISE && execution.unit === 'seconds'
+        ? execution.amount : null));
     showEndDialog(false);
   }, [step, stepState, pause, execution]);
 
