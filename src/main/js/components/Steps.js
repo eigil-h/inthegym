@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useInterval } from '../common/fun';
-import PopupDialog from './reusable/PopupDialog';
+import PopupDialog from './common/PopupDialog';
 
 const EXERCISE_STATE = {
   WARM_UP: 1,

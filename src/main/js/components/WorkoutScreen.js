@@ -4,10 +4,9 @@ import React, {
 import { StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import Steps, { mkSteps } from './Steps';
-import ExerciseDetails from './ExerciseDetails';
-import PopupDialog from './reusable/PopupDialog';
-import ProgressList from './reusable/ProgressList';
+import PopupDialog from './common/PopupDialog';
 import Instruction from './Instruction';
+import Overview from './Overview';
 
 const WORKOUT_STATE = {
   INITIAL: 1,
@@ -17,24 +16,24 @@ const WORKOUT_STATE = {
 
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [workoutState, setWorkoutState] = useState(WORKOUT_STATE.INITIAL);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [exerciseIndex, setExerciseIndex] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
   const [instruction, setInstruction] = useState({});
   const [exitDialogEvent, triggerExitDialog] = useState(null);
-  const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
+  const exercise = exercises.length > 0 ? exercises[exerciseIndex] : null;
 
   const onStarted = useCallback(() => setWorkoutState(WORKOUT_STATE.STARTED), []);
 
   const onExerciseDone = useCallback(() => {
-    if (activeIndex >= exercises.length - 1) {
+    if (exerciseIndex >= exercises.length - 1) {
       setWorkoutState(WORKOUT_STATE.ENDED);
       // noinspection JSUnresolvedVariable
       setTimeout(navigation.goBack, 0);
     } else {
-      setActiveIndex((prevState) => prevState + 1);
+      setExerciseIndex((prevState) => prevState + 1);
       setStepIndex(0);
     }
-  }, [activeIndex, exercises, navigation]);
+  }, [exerciseIndex, exercises, navigation]);
 
   const beforeRemove = useCallback((ev) => {
     if (workoutState === WORKOUT_STATE.STARTED) {
@@ -70,16 +69,11 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
         }}
       />
       <View style={styles.infoContainer}>
-        <ProgressList
-          elements={exercises}
-          activeIndex={activeIndex}
-        />
-        <View style={styles.detailsContainer}>
-          <ExerciseDetails exercise={exercise} />
-        </View>
-        <ProgressList
-          elements={steps}
-          activeIndex={stepIndex}
+        <Overview
+          exercises={exercises}
+          exerciseIndex={exerciseIndex}
+          steps={steps}
+          stepIndex={stepIndex}
         />
       </View>
       <View style={styles.instructionContainer}>
@@ -115,10 +109,6 @@ const styles = StyleSheet.create({
   },
   instructionContainer: {
     flex: 3
-  },
-  detailsContainer: {
-    flex: 1,
-    flexDirection: 'column'
   },
   inputContainer: {
     flex: 8,
