@@ -1,8 +1,19 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import {
+  FlatList, StyleSheet, Text, View
+} from 'react-native';
 import ProgressItem, { PROGRESS_STATE } from './ProgressItem';
 
-const ProgressList = ({ elements, activeIndex }) => {
+export const PROGRESS_TYPE = {
+  EXERCISE: 'Exercises',
+  STEP: 'Steps'
+};
+
+const ProgressList = ({
+  progressType,
+  elements,
+  activeIndex
+}) => {
   const ref = useRef(null);
   const progressStateForIndex = useCallback((index, currentIndex) =>
   // eslint-disable-next-line no-nested-ternary,implicit-arrow-linebreak
@@ -15,7 +26,10 @@ const ProgressList = ({ elements, activeIndex }) => {
     [ref, activeIndex]);
 
   return (
-    <View style={styles.listContainer}>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text>{progressType}</Text>
+      </View>
       <FlatList
         data={elements}
         extraData={activeIndex}
@@ -39,9 +53,13 @@ const ProgressList = ({ elements, activeIndex }) => {
  * STYLE
  */
 const styles = StyleSheet.create({
-  listContainer: {
+  container: {
     flex: 1,
     flexDirection: 'column'
+  },
+  header: {
+    paddingVertical: 5,
+    alignItems: 'center'
   }
 });
 
