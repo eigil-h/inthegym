@@ -3,9 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 export const PROGRESS_STATE = {
-  PAST: 'past',
-  PRESENT: 'present',
-  FUTURE: 'future'
+  PAST: 1,
+  PRESENT: 2,
+  FUTURE: 3
 };
 
 const ProgressItem = ({ title, progressState }) => {
@@ -33,16 +33,16 @@ const createStyles = ({ colors }) => {
       justifyContent: 'center',
       borderRadius: 10
     },
-    past: {
+    [PROGRESS_STATE.PAST]: {
       backgroundColor: colors.card
     },
-    present: {
+    [PROGRESS_STATE.PRESENT]: {
       backgroundColor: colors.primary,
       height: 70,
       marginVertical: 0,
       borderRadius: 5
     },
-    future: {
+    [PROGRESS_STATE.FUTURE]: {
       backgroundColor: colors.card
     }
   };
