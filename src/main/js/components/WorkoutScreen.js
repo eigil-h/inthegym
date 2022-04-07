@@ -68,7 +68,7 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
           triggerExitDialog(null);
         }}
       />
-      <View style={styles.infoContainer}>
+      <View style={styles.overview}>
         <Overview
           exercises={exercises}
           exerciseIndex={exerciseIndex}
@@ -102,10 +102,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column'
   },
-  infoContainer: {
+  overview: {
     flex: 9,
-    flexDirection: 'row',
-    padding: 5
   },
   instructionContainer: {
     flex: 3
