@@ -26,10 +26,9 @@ const ProgressItem = ({ title, progressState }) => {
 const createStyles = ({ colors }) => {
   const styles = {
     wrapper: {
-      height: 60,
-      marginVertical: 5,
-      paddingLeft: 15,
-      alignItems: 'flex-start',
+      height: 109,
+      marginHorizontal: 1,
+      alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 10
     },
@@ -37,10 +36,7 @@ const createStyles = ({ colors }) => {
       backgroundColor: colors.card
     },
     [PROGRESS_STATE.PRESENT]: {
-      backgroundColor: colors.primary,
-      height: 70,
-      marginVertical: 0,
-      borderRadius: 5
+      backgroundColor: colors.primary
     },
     [PROGRESS_STATE.FUTURE]: {
       backgroundColor: colors.card

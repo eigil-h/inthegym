@@ -55,7 +55,10 @@ const ProgressList = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    margin: 6,
+    borderWidth: 1,
+    borderRadius: 4
   },
   header: {
     paddingVertical: 5,

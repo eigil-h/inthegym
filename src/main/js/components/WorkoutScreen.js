@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   overview: {
-    flex: 9,
+    flex: 6,
   },
   instructionContainer: {
     flex: 3
