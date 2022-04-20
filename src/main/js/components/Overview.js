@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import ProgressList, { PROGRESS_TYPE } from './ProgressList';
+import ProgressView from './ProgressView';
 
 const Overview = ({
   exercises,
@@ -14,15 +14,11 @@ const Overview = ({
   return (
     <View style={styles.container}>
       <View style={styles.progress}>
-        <ProgressList
-          progressType={PROGRESS_TYPE.EXERCISE}
-          elements={exercises}
-          activeIndex={exerciseIndex}
+        <ProgressView
+          title={exercises[exerciseIndex].title}
         />
-        <ProgressList
-          progressType={PROGRESS_TYPE.STEP}
-          elements={steps}
-          activeIndex={stepIndex}
+        <ProgressView
+          title={steps[stepIndex].title}
         />
       </View>
       <View style={styles.description}>
