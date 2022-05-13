@@ -17,10 +17,11 @@ const loadHome = async (userId, setter) => {
   // setter(testData);
 };
 
+// eslint-disable-next-line no-unused-vars
 const testData = {
   wo1: [
     {
-      description: 'workout test',
+      description: 'workout test repeats',
       execution: {
         amount: 4,
         unit: 'repeats',
@@ -36,10 +37,10 @@ const testData = {
       title: 'test'
     },
     {
-      description: 'workout test 2',
+      description: 'workout test time',
       execution: {
-        amount: 4,
-        unit: 'repeats',
+        amount: 8,
+        unit: 'seconds',
       },
       load: {
         amount: 1,
@@ -47,7 +48,6 @@ const testData = {
         unit: 'g',
       },
       pause: 10,
-      repeats: 0,
       series: 2,
       title: 'test 2'
     }

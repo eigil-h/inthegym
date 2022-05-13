@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import React, {
+  useEffect, useState, useCallback, useMemo
+} from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
-import ExerciseListItem from './ExerciseListItem';
-import ExerciseDetails from './ExerciseDetails';
-import Exercise from './Exercise';
-import PopupDialog from './reusable/PopupDialog';
+import Steps, { mkSteps } from './Steps';
+import PopupDialog from './common/PopupDialog';
+import Instruction from './Instruction';
+import Overview from './Overview';
 
 const WORKOUT_STATE = {
   INITIAL: 1,
@@ -14,21 +16,24 @@ const WORKOUT_STATE = {
 
 const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
   const [workoutState, setWorkoutState] = useState(WORKOUT_STATE.INITIAL);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [exerciseIndex, setExerciseIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [instruction, setInstruction] = useState({});
   const [exitDialogEvent, triggerExitDialog] = useState(null);
-  const exercise = exercises.length > 0 ? exercises[activeIndex] : null;
+  const exercise = exercises.length > 0 ? exercises[exerciseIndex] : null;
 
   const onStarted = useCallback(() => setWorkoutState(WORKOUT_STATE.STARTED), []);
 
   const onExerciseDone = useCallback(() => {
-    if (activeIndex >= exercises.length - 1) {
+    if (exerciseIndex >= exercises.length - 1) {
       setWorkoutState(WORKOUT_STATE.ENDED);
       // noinspection JSUnresolvedVariable
       setTimeout(navigation.goBack, 0);
     } else {
-      setActiveIndex((prevState) => prevState + 1);
+      setExerciseIndex((prevState) => prevState + 1);
+      setStepIndex(0);
     }
-  }, [activeIndex, exercises, navigation]);
+  }, [exerciseIndex, exercises, navigation]);
 
   const beforeRemove = useCallback((ev) => {
     if (workoutState === WORKOUT_STATE.STARTED) {
@@ -41,6 +46,9 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
     return navigation.addListener('beforeRemove', beforeRemove);
   }, [navigation, beforeRemove]);
 
+  const steps = useMemo(() => mkSteps(exercise), [exercise]);
+  const nextStep = useCallback(() => setStepIndex((prev) => prev + 1), [setStepIndex]);
+
   useKeepAwake();
 
   if (!exercise) {
@@ -49,46 +57,39 @@ const WorkoutScreen = ({ navigation, route: { params: { exercises } } }) => {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.mainContainer}>
-        <PopupDialog
-          isVisible={exitDialogEvent !== null}
-          title="Exit workout?"
-          message="You have not completed the workout. Progress will be lost!"
-          onConfirm={() => {
-            navigation.dispatch(exitDialogEvent.data.action);
-          }}
-          onCancel={() => {
-            triggerExitDialog(null);
-          }}
+      <PopupDialog
+        isVisible={exitDialogEvent !== null}
+        title="Exit workout?"
+        message="You have not completed the workout. Progress will be lost!"
+        onConfirm={() => {
+          navigation.dispatch(exitDialogEvent.data.action);
+        }}
+        onCancel={() => {
+          triggerExitDialog(null);
+        }}
+      />
+      <View style={styles.overview}>
+        <Overview
+          exercises={exercises}
+          exerciseIndex={exerciseIndex}
+          steps={steps}
+          stepIndex={stepIndex}
         />
-        <Exercise
-          key={activeIndex}
+      </View>
+      <View style={styles.instructionContainer}>
+        <Instruction instruction={instruction} />
+      </View>
+      <View style={styles.inputContainer}>
+        <Steps
           exercise={exercise}
+          step={steps[stepIndex]}
           onDone={onExerciseDone}
           onStarted={onStarted}
+          nextStep={nextStep}
+          setInstruction={setInstruction}
         />
       </View>
-      <View style={styles.sideContainer}>
-        <View style={styles.listContainer}>
-          <FlatList
-            data={exercises}
-            extraData={activeIndex}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.title}
-            renderItem={({ item, index }) => (
-              <ExerciseListItem
-                index={index}
-                activeIndex={activeIndex}
-                exercise={item}
-              />
-            )}
-          />
-        </View>
-        <View style={styles.detailsContainer}>
-          <ExerciseDetails exercise={exercise} />
-        </View>
-      </View>
+      <View style={styles.statsContainer} />
     </View>
   );
 };
@@ -101,21 +102,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column'
   },
-  mainContainer: {
-    flex: 27
+  overview: {
+    flex: 6,
   },
-  sideContainer: {
-    flex: 23,
-    flexDirection: 'row'
+  instructionContainer: {
+    flex: 3
   },
-  listContainer: {
-    flex: 27,
-    flexDirection: 'column',
-    paddingLeft: 10
+  inputContainer: {
+    flex: 8,
+    padding: 5
   },
-  detailsContainer: {
-    flex: 23,
-    flexDirection: 'column'
+  statsContainer: {
+    flex: 1
   }
 });
 

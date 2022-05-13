@@ -20,4 +20,14 @@ export function useInterval(callback, timeout) {
   }, [timeout]);
 }
 
+export function usePrevious(val) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    ref.current = val;
+  }, [val]);
+
+  return ref.current;
+}
+
 export function noop() {}
