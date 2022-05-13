@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import WorkoutScreen from './WorkoutScreen';
+import SwitchButton from './common/SwitchButton';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -15,33 +16,45 @@ const appTheme = {
   }
 };
 
-const Root = () => (
-  <NavigationContainer theme={appTheme}>
-    <Navigator
-      screenOptions={{
-        headerStyle: { elevation: 0 },
-        cardStyle: { backgroundColor: appTheme.colors.background }
-      }}
-    >
-      <Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'InTheGym',
-          ...getScreenHeaderStyles(appTheme)
+const Root = () => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const toggleSwitch = () => setIsEditMode((previousState) => !previousState);
+
+  return (
+    <NavigationContainer theme={appTheme}>
+      <Navigator
+        screenOptions={{
+          headerStyle: { elevation: 0 },
+          cardStyle: { backgroundColor: appTheme.colors.background }
         }}
-      />
-      <Screen
-        name="Workout"
-        component={WorkoutScreen}
-        options={({ route }) => ({
-          title: `${route.params.title}`,
-          ...getScreenHeaderStyles(appTheme)
-        })}
-      />
-    </Navigator>
-  </NavigationContainer>
-);
+      >
+        <Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'InTheGym',
+            headerRight: () => (
+              <SwitchButton
+                labels={['Use', 'Edit']}
+                isEnabled={isEditMode}
+                onToggleSwitch={toggleSwitch}
+              />
+            ),
+            ...getScreenHeaderStyles(appTheme)
+          }}
+        />
+        <Screen
+          name="Workout"
+          component={WorkoutScreen}
+          options={({ route }) => ({
+            title: `${route.params.title}`,
+            ...getScreenHeaderStyles(appTheme)
+          })}
+        />
+      </Navigator>
+    </NavigationContainer>
+  );
+};
 
 /*
  * STYLE
