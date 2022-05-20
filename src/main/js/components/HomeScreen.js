@@ -6,7 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import loadHome from '../data/firebase';
 import { noop } from '../common/fun';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, isEditMode }) => {
   const styles = createStyles(useTheme());
   const pressableStyle = pressable(useTheme());
   const [workouts, setWorkouts] = useState([]);
@@ -17,6 +17,13 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
+      {isEditMode && (
+      <NewWorkout
+        navigation={navigation}
+        styles={styles}
+        pressableStyle={pressableStyle}
+      />
+      )}
       {Object.keys(workouts).map((title) => (
         <Pressable
           key={title}
@@ -34,6 +41,18 @@ const HomeScreen = ({ navigation }) => {
     </View>
   );
 };
+
+const NewWorkout = ({ navigation, styles, pressableStyle }) => (
+  <Pressable
+    key="newWO"
+    onPress={() => navigation.navigate('NewWorkout')}
+    style={pressableStyle}
+  >
+    <View style={[styles.butt, styles.newButt]}>
+      <Text style={[styles.buttTxt, styles.newButtTxt]}>New Workout</Text>
+    </View>
+  </Pressable>
+);
 
 /*
  * STYLE
@@ -57,6 +76,13 @@ const createStyles = ({ colors }) => {
       textAlign: 'center',
       fontSize: 18,
       fontFamily: 'serif'
+    },
+    newButt: {
+      borderWidth: 1,
+      borderStyle: 'dashed'
+    },
+    newButtTxt: {
+      fontStyle: 'italic'
     }
   };
 

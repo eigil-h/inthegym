@@ -30,7 +30,6 @@ const Root = () => {
       >
         <Screen
           name="Home"
-          component={HomeScreen}
           options={{
             title: 'InTheGym',
             headerRight: () => (
@@ -42,7 +41,14 @@ const Root = () => {
             ),
             ...getScreenHeaderStyles(appTheme)
           }}
-        />
+        >
+          {(props) => (
+            <HomeScreen
+              navigation={props.navigation}
+              isEditMode={isEditMode}
+            />
+          )}
+        </Screen>
         <Screen
           name="Workout"
           component={WorkoutScreen}
