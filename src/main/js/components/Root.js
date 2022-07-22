@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import WorkoutScreen from './WorkoutScreen';
 import SwitchButton from './common/SwitchButton';
+import EditWorkoutScreen from './EditWorkoutScreen';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -52,6 +53,14 @@ const Root = () => {
         <Screen
           name="Workout"
           component={WorkoutScreen}
+          options={({ route }) => ({
+            title: `${route.params.title}`,
+            ...getScreenHeaderStyles(appTheme)
+          })}
+        />
+        <Screen
+          name="EditWorkout"
+          component={EditWorkoutScreen}
           options={({ route }) => ({
             title: `${route.params.title}`,
             ...getScreenHeaderStyles(appTheme)

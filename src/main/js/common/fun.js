@@ -31,3 +31,13 @@ export function usePrevious(val) {
 }
 
 export function noop() {}
+
+/**
+ * Makes a shallow copy of arr and pushes obj to its end.
+ * Returns the new Array
+ */
+export function cpPush(arr, obj) {
+  const newArray = Array.from(arr || []);
+  newArray.push(obj);
+  return newArray;
+}

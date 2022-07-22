@@ -17,6 +17,17 @@ const loadHome = async (userId, setter) => {
   // setter(testData);
 };
 
+export const updateWorkout = async (userId, name, data) => {
+  try {
+    await firestore.collection(`user/${userId}/workout`)
+      .doc(name)
+      .set(data);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 // eslint-disable-next-line no-unused-vars
 const testData = {
   wo1: [

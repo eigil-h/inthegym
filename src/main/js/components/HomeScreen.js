@@ -27,7 +27,7 @@ const HomeScreen = ({ navigation, isEditMode }) => {
       {Object.keys(workouts).map((title) => (
         <Pressable
           key={title}
-          onPress={() => navigation.navigate('Workout', {
+          onPress={() => navigation.navigate(isEditMode ? 'EditWorkout' : 'Workout', {
             title,
             exercises: workouts[title]
           })}
@@ -44,8 +44,11 @@ const HomeScreen = ({ navigation, isEditMode }) => {
 
 const NewWorkout = ({ navigation, styles, pressableStyle }) => (
   <Pressable
-    key="newWO"
-    onPress={() => navigation.navigate('NewWorkout')}
+    key="editWO"
+    onPress={() => navigation.navigate('EditWorkout', {
+      title: 'New Workout',
+      exercises: []
+    })}
     style={pressableStyle}
   >
     <View style={[styles.butt, styles.newButt]}>
