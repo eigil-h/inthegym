@@ -1,36 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Text, Pressable, View, StyleSheet
+  Text, Pressable, View, StyleSheet, TextInput
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import loadHome from '../data/firebase';
+import { useFocusEffect, useTheme } from '@react-navigation/native';
+import loadHome, { updateWorkout as fbUpdate } from '../data/firebase';
 import { noop } from '../common/fun';
+
+const USER_ID = 'eigil';
+const NEW_WORKOUT = 'New Workout';
 
 const HomeScreen = ({ navigation, isEditMode }) => {
   const styles = createStyles(useTheme());
   const pressableStyle = pressable(useTheme());
   const [workouts, setWorkouts] = useState([]);
+  const [shouldReload, setShouldReload] = useState(false);
+
+  const newWorkout = useCallback(
+    (title) => {
+      fbUpdate(USER_ID, title, { exercises: [] })
+        .then(setShouldReload(true));
+    },
+    []
+  );
 
   useEffect(() => {
-    loadHome('eigil', setWorkouts).then(noop);
-  }, []);
+    if (shouldReload) {
+      setShouldReload(false);
+      loadHome(USER_ID, setWorkouts).then(noop);
+    }
+  }, [shouldReload]);
+
+  useFocusEffect(() => {
+    loadHome(USER_ID, setWorkouts).then(noop);
+  });
 
   return (
     <View style={styles.screen}>
       {isEditMode && (
       <NewWorkout
-        navigation={navigation}
         styles={styles}
         pressableStyle={pressableStyle}
+        onNamed={newWorkout}
       />
       )}
       {Object.keys(workouts).map((title) => (
         <Pressable
           key={title}
-          onPress={() => navigation.navigate(isEditMode ? 'EditWorkout' : 'Workout', {
-            title,
-            exercises: workouts[title]
-          })}
+          onPress={() => {
+            if (isEditMode) {
+              navigation.navigate('EditWorkout', {
+                title,
+                exercises: workouts[title],
+                userId: USER_ID,
+                setUpdated: setShouldReload
+              });
+            } else {
+              navigation.navigate('Workout', {
+                title,
+                exercises: workouts[title]
+              });
+            }
+          }}
           style={pressableStyle}
         >
           <View style={styles.butt}>
@@ -42,20 +72,45 @@ const HomeScreen = ({ navigation, isEditMode }) => {
   );
 };
 
-const NewWorkout = ({ navigation, styles, pressableStyle }) => (
-  <Pressable
-    key="editWO"
-    onPress={() => navigation.navigate('EditWorkout', {
-      title: 'New Workout',
-      exercises: []
-    })}
-    style={pressableStyle}
-  >
-    <View style={[styles.butt, styles.newButt]}>
-      <Text style={[styles.buttTxt, styles.newButtTxt]}>New Workout</Text>
-    </View>
-  </Pressable>
-);
+const NewWorkout = ({
+  styles,
+  pressableStyle,
+  onNamed
+}) => {
+  const [isEdit, setEdit] = useState(false);
+  const [title, setTitle] = useState('');
+
+  const editDoneHandler = useCallback(() => {
+    onNamed(title);
+    setEdit(false);
+    setTitle('');
+  }, [onNamed, title]);
+
+  return (
+    <Pressable
+      key="editWO"
+      onPress={() => setEdit(true)}
+      style={pressableStyle}
+    >
+      <View style={[styles.butt, styles.newButt]}>
+        {isEdit ? (
+          <TextInput
+            style={[styles.buttTxt, styles.newButtTxt]}
+            multiline
+            blurOnSubmit
+            autoFocus
+            placeholder={NEW_WORKOUT}
+            value={title}
+            onChangeText={setTitle}
+            onSubmitEditing={editDoneHandler}
+          />
+        ) : (
+          <Text style={[styles.buttTxt, styles.newButtTxt]}>{NEW_WORKOUT}</Text>
+        )}
+      </View>
+    </Pressable>
+  );
+};
 
 /*
  * STYLE
