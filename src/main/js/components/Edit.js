@@ -3,6 +3,7 @@ import {
   StyleSheet, View, Text, TextInput, Pressable
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import RadioSelector from './common/RadioSelector';
 
 const Edit = ({ exercise: original, onUpdate }) => {
   const theme = useTheme();
@@ -39,7 +40,6 @@ const Edit = ({ exercise: original, onUpdate }) => {
   }, []);
 
   const numberFilter = useCallback((text) => (text.match(/\d*/g)), []);
-  const selectionFilter = useCallback((text) => (text.match('repeats') || text.match('seconds')), []);
   const noFilter = useCallback(() => true, []);
 
   useEffect(() => {
@@ -61,13 +61,14 @@ const Edit = ({ exercise: original, onUpdate }) => {
             isNumber
             onUpdate={setExecutionAmount}
           />
-          <Input
-            styles={styles}
-            label="unit"
-            value={exercise.execution.unit}
-            filter={selectionFilter}
-            onUpdate={setExecutionUnit}
-          />
+          <View style={styles.input}>
+            <Text style={styles.labelText}>unit</Text>
+            <RadioSelector
+              items={['repeats', 'seconds']}
+              selectedItem={exercise.execution.unit}
+              onSelected={setExecutionUnit}
+            />
+          </View>
         </Group>
         <Group
           styles={styles}
