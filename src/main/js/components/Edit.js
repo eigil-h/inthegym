@@ -32,6 +32,7 @@ const Edit = ({ exercise: original, onUpdate }) => {
   }, []);
 
   const setSeries = useCallback((value) => {
+    if (value < 1) return;
     setExercise((prev) => ({ ...prev, series: Number(value) }));
   }, []);
 

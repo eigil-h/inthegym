@@ -15,6 +15,7 @@ const RadioSelector = React.memo(({
     <View style={styles.container}>
       {items.map((item) => (
         <RadioButton
+          key={item}
           label={item}
           isSelected={selectedItem === item}
           onSelected={onSelected}

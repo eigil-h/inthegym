@@ -5,34 +5,43 @@ import {
 import { useFocusEffect, useTheme } from '@react-navigation/native';
 import loadHome, { updateWorkout as fbUpdate } from '../data/firebase';
 import { noop } from '../common/fun';
+import LoginPopup from './common/LoginPopup';
 
-const USER_ID = 'eigil';
 const NEW_WORKOUT = 'New Workout';
 
 const HomeScreen = ({ navigation, isEditMode }) => {
   const styles = createStyles(useTheme());
   const pressableStyle = pressable(useTheme());
+  const [userId, setUserId] = useState(null);
   const [workouts, setWorkouts] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
 
   const newWorkout = useCallback(
     (title) => {
-      fbUpdate(USER_ID, title, { exercises: [] })
-        .then(setShouldReload(true));
+      if (userId) {
+        fbUpdate(userId, title, { exercises: [] })
+          .then(setShouldReload(true));
+      }
     },
-    []
+    [userId]
   );
 
   useEffect(() => {
-    if (shouldReload) {
+    if (shouldReload && userId) {
       setShouldReload(false);
-      loadHome(USER_ID, setWorkouts).then(noop);
+      loadHome(userId, setWorkouts).then(noop);
     }
-  }, [shouldReload]);
+  }, [shouldReload, userId]);
 
   useFocusEffect(() => {
-    loadHome(USER_ID, setWorkouts).then(noop);
+    if (userId) {
+      loadHome(userId, setWorkouts).then(noop);
+    }
   });
+
+  if (!userId) {
+    return (<LoginPopup onSelected={setUserId} />);
+  }
 
   return (
     <View style={styles.screen}>
@@ -51,7 +60,7 @@ const HomeScreen = ({ navigation, isEditMode }) => {
               navigation.navigate('EditWorkout', {
                 title,
                 exercises: workouts[title],
-                userId: USER_ID
+                userId
               });
             } else {
               navigation.navigate('Workout', {

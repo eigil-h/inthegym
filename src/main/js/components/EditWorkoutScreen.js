@@ -18,7 +18,7 @@ const TEMPLATE = {
     unit: '',
     increase: 0
   },
-  series: 0,
+  series: 1,
   pause: 30
 };
 
