@@ -38,6 +38,9 @@
         }
       }
     },
-    "description": ""
+    "description": "",
+    "android": {
+      "package": "net.inthegym"
+    }
   }
 }
