@@ -51,8 +51,7 @@ const HomeScreen = ({ navigation, isEditMode }) => {
               navigation.navigate('EditWorkout', {
                 title,
                 exercises: workouts[title],
-                userId: USER_ID,
-                setUpdated: setShouldReload
+                userId: USER_ID
               });
             } else {
               navigation.navigate('Workout', {

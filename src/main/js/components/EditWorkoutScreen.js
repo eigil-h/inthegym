@@ -3,7 +3,7 @@ import {
   Pressable, StyleSheet, Text, View, TextInput
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { colorToRgba, rgbaToColor } from '../common/fun';
+import { colorToRgba, noop, rgbaToColor } from '../common/fun';
 import Edit from './Edit';
 import { updateWorkout as fbUpdate } from '../data/firebase';
 
@@ -27,8 +27,7 @@ const EditWorkoutScreen = ({
     params: {
       exercises: existingExercises,
       title: workoutTitle,
-      userId,
-      setUpdated
+      userId
     }
   }
 }) => {
@@ -62,9 +61,9 @@ const EditWorkoutScreen = ({
   useEffect(
     () => {
       fbUpdate(userId, workoutTitle, { exercises })
-        .then(setUpdated(true));
+        .then(noop);
     },
-    [exercises, setUpdated, userId, workoutTitle]
+    [exercises, userId, workoutTitle]
   );
 
   return (
