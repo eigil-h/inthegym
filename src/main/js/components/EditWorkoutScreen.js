@@ -1,6 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {
+  useState, useCallback, useEffect, useRef
+} from 'react';
 import {
-  Pressable, StyleSheet, Text, View
+  Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { noop } from '../common/fun';
@@ -22,7 +24,7 @@ const TEMPLATE = {
   pause: 30
 };
 
-const EditWorkoutScreen = ({
+const EditWorkoutScreen = React.memo(({
   route: {
     params: {
       exercises: existingExercises,
@@ -37,22 +39,21 @@ const EditWorkoutScreen = ({
   const [exercises, setExercises] = useState(existingExercises);
   const [selected, setSelected] = useState(exercises[0]);
 
-  const rename = useCallback((newTitle, exercise) => {
-    setExercises((prev) => prev.map((ex) => {
-      return ex === exercise ? { ...ex, title: newTitle } : ex;
-    }));
-  }, []);
-
   const addExercise = useCallback(
-    (exercise) => {
-      setExercises((prev) => [...prev, exercise]);
-      setSelected(exercise);
+    () => {
+      setExercises((prev) => [...prev, TEMPLATE]);
+      setSelected(TEMPLATE);
     },
     []
   );
 
   const updateExercise = useCallback(
-    (prevTitle, exercise) => setExercises((prev) => prev.map((ex) => (ex.title === prevTitle ? exercise : ex))),
+    (prevTitle, exercise) => {
+      setExercises(
+        (prev) => prev.map((ex) => (ex.title === prevTitle ? exercise : ex))
+      );
+      setSelected(exercise);
+    },
     []
   );
 
@@ -67,20 +68,19 @@ const EditWorkoutScreen = ({
   );
 
   return (
-    <View style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper}>
       <View style={styles.leftBar}>
         <Tabs
           styles={styles}
           exercises={exercises}
           selected={selected}
           onSelected={setSelected}
-          onRenamed={rename}
         />
         <Pressable
           style={[styles.newButton, pressableStyle]}
-          onPress={() => addExercise(TEMPLATE)}
+          onPress={addExercise}
         >
-          <Text style={styles.newButtonText}>New workout</Text>
+          <Text style={styles.newButtonText}>New exercise</Text>
         </Pressable>
       </View>
       <View style={styles.main}>
@@ -91,46 +91,68 @@ const EditWorkoutScreen = ({
         />
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
-};
+});
 
-const Tabs = ({
+const Tabs = React.memo(({
   styles,
   exercises,
   selected,
-  onSelected,
-  onRenamed
-}) => (
-  <View style={styles.tabs}>
-    {exercises.map((ex) => ((ex === selected) ? (
-      <SelectedTab
-        key={ex.title}
-        styles={styles}
-        exercise={ex}
-        onRenamed={onRenamed}
-      />
-    ) : (
-      <Tab
-        key={ex.title}
-        styles={styles}
-        exercise={ex}
-        onSelected={onSelected}
-      />
-    )))}
-  </View>
-);
+  onSelected
+}) => {
+  const scrollRef = useRef();
+  const [height, setHeight] = useState(0);
+  const [selectedY, setSelectedY] = useState(0);
 
-const Tab = ({
+  const selectedHandler = useCallback((exercise, y) => {
+    setSelectedY(y);
+    onSelected(exercise);
+  },
+  [onSelected]);
+
+  const layoutHandler = useCallback(
+    ({ nativeEvent }) => setHeight(nativeEvent.layout.height),
+    []
+  );
+
+  useEffect(
+    () => {
+      if (selectedY > height) {
+        scrollRef.current?.scrollTo({ y: selectedY, animated: true });
+      }
+    },
+    [height, selectedY]
+  );
+
+  return (
+    <ScrollView
+      ref={scrollRef}
+      onLayout={layoutHandler}
+      contentContainerStyle={styles.tabs}
+      showsVerticalScrollIndicator={false}
+    >
+      {exercises.map((ex) => (
+        <Tab
+          key={ex.title}
+          styles={styles}
+          exercise={ex}
+          isSelected={ex === selected}
+          onSelected={selectedHandler}
+        />
+      ))}
+    </ScrollView>
+  );
+});
+
+const Tab = React.memo(({
   styles,
   exercise,
+  isSelected,
   onSelected
-}) => (
-  <Pressable
-    key={exercise.title}
-    onPress={() => onSelected(exercise)}
-    style={styles.tab}
-  >
+}) => {
+  const [y, setY] = useState(0);
+  const renderText = useCallback(() => (
     <Text
       style={styles.tabText}
       ellipsizeMode="middle"
@@ -138,26 +160,26 @@ const Tab = ({
     >
       {exercise.title}
     </Text>
-  </Pressable>
-);
-
-const SelectedTab = ({
-  styles,
-  exercise
-}) => {
+  ), [exercise.title, styles.tabText]);
 
   return (
-    <View style={[styles.tab, styles.selectedTab]}>
-      <Text
-        style={styles.tabText}
-        ellipsizeMode="middle"
-        numberOfLines={2}
-      >
-        {exercise.title}
-      </Text>
+    <View onLayout={({ nativeEvent }) => setY(nativeEvent.layout.y)}>
+      {(isSelected ? (
+        <View style={[styles.tab, styles.selectedTab]}>
+          {renderText()}
+        </View>
+      ) : (
+        <Pressable
+          key={exercise.title}
+          onPress={() => onSelected(exercise, y)}
+          style={styles.tab}
+        >
+          {renderText()}
+        </Pressable>
+      ))}
     </View>
   );
-};
+});
 
 /*
  * STYLE

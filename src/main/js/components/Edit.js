@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  StyleSheet, View, Text, TextInput, Pressable
+  StyleSheet, View, Text, TextInput, Pressable, ScrollView
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import RadioSelector from './common/RadioSelector';
@@ -53,7 +53,10 @@ const Edit = ({ exercise: original, onUpdate }) => {
   }, [original]);
 
   return (
-    <View style={styles.wrapper}>
+    <ScrollView
+      contentContainerStyle={styles.wrapper}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.inputs}>
         <Input
           styles={styles}
@@ -104,7 +107,7 @@ const Edit = ({ exercise: original, onUpdate }) => {
           />
           <Input
             styles={styles}
-            label="increase by"
+            label="increase"
             value={exercise.load.increase?.toString()}
             filter={numberFilter}
             isNumber
@@ -136,11 +139,11 @@ const Edit = ({ exercise: original, onUpdate }) => {
           <Text style={styles.saveText}>Save</Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
-const Group = ({
+const Group = React.memo(({
   styles,
   title,
   children
@@ -151,7 +154,7 @@ const Group = ({
       {children}
     </View>
   </View>
-);
+));
 
 const Input = React.memo(({
   styles,
@@ -196,7 +199,7 @@ const createStyles = ({ colors }) => {
     },
     inputs: {
       flexDirection: 'column',
-      paddingHorizontal: 12,
+      paddingHorizontal: 18,
       backgroundColor: colors.card
     },
     group: {
