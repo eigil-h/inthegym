@@ -5,6 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "publish": "expo publish",
+    "build": "eas build -p android --profile preview",
     "eject": "expo eject",
     "lint": "eslint *.js **/*.js src/**/*.js"
   },
