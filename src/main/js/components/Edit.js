@@ -11,6 +11,11 @@ const Edit = ({ exercise: original, onUpdate }) => {
   const pressableStyle = pressable(theme);
   const [exercise, setExercise] = useState(original);
 
+  const setTitle = useCallback((value) => {
+    if (!value) return;
+    setExercise((prev) => ({ ...prev, title: value }));
+  }, []);
+
   const setExecutionAmount = useCallback((value) => {
     setExercise((prev) => ({ ...prev, execution: { ...prev.execution, amount: Number(value) } }));
   }, []);
@@ -50,6 +55,13 @@ const Edit = ({ exercise: original, onUpdate }) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.inputs}>
+        <Input
+          styles={styles}
+          label="title"
+          value={exercise.title}
+          filter={noFilter}
+          onUpdate={setTitle}
+        />
         <Group
           styles={styles}
           title="execution"
@@ -119,9 +131,9 @@ const Edit = ({ exercise: original, onUpdate }) => {
       <View style={styles.save}>
         <Pressable
           style={pressableStyle}
-          onPress={() => onUpdate(exercise)}
+          onPress={() => onUpdate(original.title, exercise)}
         >
-          <Text style={styles.labelText}>Save</Text>
+          <Text style={styles.saveText}>Save</Text>
         </Pressable>
       </View>
     </View>
@@ -200,20 +212,22 @@ const createStyles = ({ colors }) => {
     },
     input: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
       paddingTop: 12,
       borderBottomWidth: 1,
       borderColor: colors.border
     },
     labelText: {
+      flex: 1,
       fontFamily: 'serif',
       fontSize: 16,
       color: colors.text
     },
     inputText: {
+      flex: 2,
       fontFamily: 'sans-serif',
-      fontSize: 18,
+      fontSize: 22,
+      textAlign: 'right',
       color: colors.text,
       marginLeft: 24
     },
@@ -221,6 +235,11 @@ const createStyles = ({ colors }) => {
       flexDirection: 'column',
       alignItems: 'center',
       marginTop: 24
+    },
+    saveText: {
+      fontFamily: 'serif',
+      fontSize: 22,
+      color: colors.text
     }
   };
 

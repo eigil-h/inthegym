@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
-  Pressable, StyleSheet, Text, View, TextInput
+  Pressable, StyleSheet, Text, View
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { colorToRgba, noop, rgbaToColor } from '../common/fun';
+import { noop } from '../common/fun';
 import Edit from './Edit';
 import { updateWorkout as fbUpdate } from '../data/firebase';
 
@@ -52,7 +52,7 @@ const EditWorkoutScreen = ({
   );
 
   const updateExercise = useCallback(
-    (exercise) => setExercises((prev) => prev.map((ex) => (ex.title === exercise.title ? exercise : ex))),
+    (prevTitle, exercise) => setExercises((prev) => prev.map((ex) => (ex.title === prevTitle ? exercise : ex))),
     []
   );
 
@@ -131,25 +131,30 @@ const Tab = ({
     onPress={() => onSelected(exercise)}
     style={styles.tab}
   >
-    <Text style={styles.tabText}>{exercise.title}</Text>
+    <Text
+      style={styles.tabText}
+      ellipsizeMode="middle"
+      numberOfLines={2}
+    >
+      {exercise.title}
+    </Text>
   </Pressable>
 );
 
 const SelectedTab = ({
   styles,
-  exercise,
-  onRenamed
+  exercise
 }) => {
-  const [title, setTitle] = useState(exercise.title);
 
   return (
     <View style={[styles.tab, styles.selectedTab]}>
-      <TextInput
-        style={styles.selectedTabEdit}
-        value={`${title}`}
-        onChangeText={setTitle}
-        onBlur={() => onRenamed(title, exercise)}
-      />
+      <Text
+        style={styles.tabText}
+        ellipsizeMode="middle"
+        numberOfLines={2}
+      >
+        {exercise.title}
+      </Text>
     </View>
   );
 };
@@ -158,12 +163,6 @@ const SelectedTab = ({
  * STYLE
  */
 const createStyles = ({ colors }) => {
-  const darken = (v, i) => {
-    const factor = i === 0 ? 0.93 : 0.97;
-    return v * factor;
-  };
-  const inputBg = rgbaToColor(colorToRgba(colors.background).map(darken));
-
   const styles = {
     wrapper: {
       flex: 1,
@@ -171,6 +170,7 @@ const createStyles = ({ colors }) => {
       margin: 6
     },
     leftBar: {
+      flex: 2,
       flexDirection: 'column',
       justifyContent: 'space-between'
     },
@@ -178,25 +178,21 @@ const createStyles = ({ colors }) => {
       flex: 5
     },
     tabs: {
-      flex: 2,
       flexDirection: 'column'
     },
     tab: {
       borderBottomWidth: 1,
       borderColor: colors.border,
-      paddingVertical: 12
+      paddingVertical: 12,
+      paddingLeft: 12
     },
     tabText: {
       fontFamily: 'sans-serif',
       fontSize: 18,
-      textAlign: 'center',
       color: colors.text
     },
     selectedTab: {
       backgroundColor: colors.card
-    },
-    selectedTabEdit: {
-      backgroundColor: inputBg
     },
     newButton: {
       margin: 16,
