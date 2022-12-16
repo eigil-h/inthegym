@@ -3,6 +3,7 @@ import {
   StyleSheet, View, Text, TextInput, Pressable, ScrollView
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import RadioSelector from './common/RadioSelector';
 
 const Edit = ({ exercise: original, onUpdate }) => {
@@ -131,12 +132,21 @@ const Edit = ({ exercise: original, onUpdate }) => {
           onUpdate={setPause}
         />
       </View>
-      <View style={styles.save}>
+      <View style={styles.button}>
         <Pressable
           style={pressableStyle}
           onPress={() => onUpdate(original.title, exercise)}
         >
-          <Text style={styles.saveText}>Save</Text>
+          <Text style={styles.buttonText}>Save</Text>
+        </Pressable>
+        <Pressable
+          style={pressableStyle}
+          onPress={() => onUpdate(original.title, null)}
+        >
+          <Ionicons
+            name="trash-bin"
+            style={styles.buttonText}
+          />
         </Pressable>
       </View>
     </ScrollView>
@@ -234,14 +244,15 @@ const createStyles = ({ colors }) => {
       color: colors.text,
       marginLeft: 24
     },
-    save: {
-      flexDirection: 'column',
-      alignItems: 'center',
+    button: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
       marginTop: 24
     },
-    saveText: {
+    buttonText: {
       fontFamily: 'serif',
       fontSize: 22,
+      lineHeight: 26,
       color: colors.text
     }
   };
@@ -250,24 +261,13 @@ const createStyles = ({ colors }) => {
 };
 
 const pressable = ({ colors }) => ({ pressed }) => {
-  if (pressed) {
-    return {
-      paddingVertical: 6,
-      paddingHorizontal: 24,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: colors.border,
-      backgroundColor: colors.primary
-    };
-  }
-
   return {
     paddingVertical: 6,
     paddingHorizontal: 24,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: colors.border,
-    backgroundColor: colors.card
+    backgroundColor: pressed ? colors.primary : colors.card
   };
 };
 

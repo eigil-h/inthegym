@@ -1,5 +1,5 @@
 import React, {
-  useState, useCallback, useEffect, useRef
+  useCallback, useEffect, useRef, useState
 } from 'react';
 import {
   Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View
@@ -37,7 +37,7 @@ const EditWorkoutScreen = React.memo(({
   const styles = createStyles(theme);
   const pressableStyle = pressable(theme);
   const [exercises, setExercises] = useState(existingExercises);
-  const [selected, setSelected] = useState(exercises[0]);
+  const [selected, setSelected] = useState(exercises?.[0]);
 
   const addExercise = useCallback(
     () => {
@@ -48,12 +48,11 @@ const EditWorkoutScreen = React.memo(({
   );
 
   const updateExercise = useCallback(
-    (prevTitle, exercise) => {
-      setExercises(
-        (prev) => prev.map((ex) => (ex.title === prevTitle ? exercise : ex))
-      );
-      setSelected(exercise);
-    },
+    (prevTitle, exercise) => setExercises(
+      (prev) => prev
+        .filter((ex) => !(ex.title === prevTitle && exercise === null))
+        .map((ex) => (ex.title === prevTitle ? exercise : ex))
+    ),
     []
   );
 
@@ -63,8 +62,12 @@ const EditWorkoutScreen = React.memo(({
     () => {
       fbUpdate(userId, workoutTitle, { exercises })
         .then(noop);
+      const current = exercises.find((ex) => ex.title === selected.title);
+      if (!current) {
+        setSelected(exercises?.[0]);
+      }
     },
-    [exercises, userId, workoutTitle]
+    [exercises, selected.title, userId, workoutTitle]
   );
 
   return (
@@ -84,12 +87,12 @@ const EditWorkoutScreen = React.memo(({
         </Pressable>
       </View>
       <View style={styles.main}>
-        {Boolean(selected) && (
-        <Edit
-          exercise={selected}
-          onUpdate={updateExercise}
-        />
-        )}
+        {selected ? (
+          <Edit
+            exercise={selected}
+            onUpdate={updateExercise}
+          />
+        ) : <View />}
       </View>
     </SafeAreaView>
   );
