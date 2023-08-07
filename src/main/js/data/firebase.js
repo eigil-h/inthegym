@@ -8,7 +8,7 @@ import {
 } from 'firebase/firestore';
 import Constants from 'expo-constants';
 
-const app = initializeApp(Constants.manifest.web.config.firebase);
+const app = initializeApp(Constants.expoConfig.web.config.firebase);
 const db = getFirestore(app);
 
 const loadHome = async (userId, setter) => {
