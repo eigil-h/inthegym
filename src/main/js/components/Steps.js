@@ -1,10 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState
+} from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useInterval } from '../common/fun';
+import { Audio } from 'expo-av';
+import { Asset } from 'expo-asset';
+import { noop, useInterval } from '../common/fun';
 import PopupDialog from './common/PopupDialog';
+import Alert from '../../../../assets/alert.mp3';
 
 const EXERCISE_STATE = {
   WARM_UP: 1,
@@ -66,6 +71,19 @@ const Step = ({
   const [isEndDialog, showEndDialog] = useState(false);
   const triggerEndDialog = useCallback(() => showEndDialog(true), []);
   const cancelHandler = useCallback(() => showEndDialog(false), []);
+  const soundObject = useRef(null);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      const soundAsset = Asset.fromModule(Alert);
+      await soundAsset.downloadAsync();
+
+      soundObject.current = new Audio.Sound();
+      await soundObject.current.loadAsync(soundAsset);
+    };
+
+    loadSound().then(noop);
+  }, []);
 
   useEffect(() => {
     setCount(stepState === EXERCISE_STATE.PAUSE ? pause
@@ -102,7 +120,12 @@ const Step = ({
 
   useInterval(() => {
     if (count) {
-      setCount((prev) => (prev > 0 ? prev - 1 : 0));
+      setCount((prev) => {
+        if (prev === 1) {
+          soundObject.current.playAsync();
+        }
+        return prev > 0 ? prev - 1 : 0;
+      });
     }
   }, 1000);
 
