@@ -16,7 +16,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/3b9277a4-8d00-4a5b-824f-4e11368e0539"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -41,6 +42,14 @@
     "description": "",
     "android": {
       "package": "net.inthegym"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3b9277a4-8d00-4a5b-824f-4e11368e0539"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
