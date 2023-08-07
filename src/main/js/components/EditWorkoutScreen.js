@@ -37,7 +37,7 @@ const EditWorkoutScreen = React.memo(({
   const styles = createStyles(theme);
   const pressableStyle = pressable(theme);
   const [exercises, setExercises] = useState(existingExercises);
-  const [selected, setSelected] = useState(exercises?.[0]);
+  const [selected, setSelected] = useState(exercises[0]);
 
   const addExercise = useCallback(
     () => {
@@ -62,12 +62,12 @@ const EditWorkoutScreen = React.memo(({
     () => {
       fbUpdate(userId, workoutTitle, { exercises })
         .then(noop);
-      const current = exercises.find((ex) => ex.title === selected.title);
+      const current = exercises.find((ex) => ex.title === selected?.title);
       if (!current) {
         setSelected(exercises?.[0]);
       }
     },
-    [exercises, selected.title, userId, workoutTitle]
+    [exercises, selected, userId, workoutTitle]
   );
 
   return (

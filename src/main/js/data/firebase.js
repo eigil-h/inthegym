@@ -1,16 +1,21 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  setDoc,
+  doc
+} from 'firebase/firestore';
 import Constants from 'expo-constants';
 
-firebase.initializeApp(Constants.manifest.web.config.firebase);
-const firestore = firebase.firestore();
+const app = initializeApp(Constants.expoConfig.web.config.firebase);
+const db = getFirestore(app);
 
 const loadHome = async (userId, setter) => {
-  const workoutRef = firestore.collection(`user/${userId}/workout`);
-  const workoutSnap = await workoutRef.get();
+  const workoutSnap = await getDocs(collection(db, `user/${userId}/workout`));
   const docs = {};
-  workoutSnap.docs.forEach((doc) => {
-    docs[doc.id] = doc.data()?.exercises;
+  workoutSnap.forEach((doc_) => {
+    docs[doc_.id] = doc_.data()?.exercises;
   });
 
   setter(docs);
@@ -19,9 +24,7 @@ const loadHome = async (userId, setter) => {
 
 export const updateWorkout = async (userId, name, data) => {
   try {
-    await firestore.collection(`user/${userId}/workout`)
-      .doc(name)
-      .set(data);
+    await setDoc(doc(db, `user/${userId}/workout`, name), data);
     return true;
   } catch (e) {
     return false;
