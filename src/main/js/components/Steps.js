@@ -3,8 +3,11 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useInterval } from '../common/fun';
+import { Audio } from 'expo-av';
+import { Asset } from 'expo-asset';
+import { noop, useInterval } from '../common/fun';
 import PopupDialog from './common/PopupDialog';
+import Alert from '../../../../assets/alert.mp3';
 
 const EXERCISE_STATE = {
   WARM_UP: 1,
@@ -64,8 +67,29 @@ const Step = ({
 
   const [count, setCount] = useState(null);
   const [isEndDialog, showEndDialog] = useState(false);
+  const [soundObject, setSoundObject] = useState(null);
   const triggerEndDialog = useCallback(() => showEndDialog(true), []);
   const cancelHandler = useCallback(() => showEndDialog(false), []);
+
+  const alert = useCallback(() => {
+    const playAlert = async () => {
+      const soundAsset = Asset.fromModule(Alert);
+      await soundAsset.downloadAsync();
+
+      const { sound } = await Audio.Sound.createAsync(soundAsset);
+      setSoundObject(sound);
+
+      await sound.playAsync();
+    };
+
+    playAlert().then(noop).catch();
+  }, []);
+
+  useEffect(() => {
+    return soundObject ? () => {
+      soundObject.unloadAsync();
+    } : undefined;
+  }, [soundObject]);
 
   useEffect(() => {
     setCount(stepState === EXERCISE_STATE.PAUSE ? pause
@@ -77,7 +101,7 @@ const Step = ({
   useEffect(() => {
     const instructionData = {};
     if (count !== null) {
-      instructionData.count = `${new Date(count * 1000).toISOString().substr(15, 4)}`;
+      instructionData.count = `${Math.floor(count / 60)}:${`${count % 60}`.padStart(2, '0')}`;
       instructionData.countColor = count === 0 ? colors.notification : colors.text;
     }
     switch (stepState) {
@@ -102,7 +126,12 @@ const Step = ({
 
   useInterval(() => {
     if (count) {
-      setCount((prev) => (prev > 0 ? prev - 1 : 0));
+      setCount((prev) => {
+        if (prev === 1) {
+          alert();
+        }
+        return prev > 0 ? prev - 1 : 0;
+      });
     }
   }, 1000);
 
