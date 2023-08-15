@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useEffect, useRef, useState
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -69,21 +67,29 @@ const Step = ({
 
   const [count, setCount] = useState(null);
   const [isEndDialog, showEndDialog] = useState(false);
+  const [soundObject, setSoundObject] = useState(null);
   const triggerEndDialog = useCallback(() => showEndDialog(true), []);
   const cancelHandler = useCallback(() => showEndDialog(false), []);
-  const soundObject = useRef(null);
 
-  useEffect(() => {
-    const loadSound = async () => {
+  const alert = useCallback(() => {
+    const playAlert = async () => {
       const soundAsset = Asset.fromModule(Alert);
       await soundAsset.downloadAsync();
 
-      soundObject.current = new Audio.Sound();
-      await soundObject.current.loadAsync(soundAsset);
+      const { sound } = await Audio.Sound.createAsync(soundAsset);
+      setSoundObject(sound);
+
+      await sound.playAsync();
     };
 
-    loadSound().then(noop);
+    playAlert().then(noop).catch();
   }, []);
+
+  useEffect(() => {
+    return soundObject ? () => {
+      soundObject.unloadAsync();
+    } : undefined;
+  }, [soundObject]);
 
   useEffect(() => {
     setCount(stepState === EXERCISE_STATE.PAUSE ? pause
@@ -95,7 +101,7 @@ const Step = ({
   useEffect(() => {
     const instructionData = {};
     if (count !== null) {
-      instructionData.count = `${new Date(count * 1000).toISOString().substr(15, 4)}`;
+      instructionData.count = `${Math.floor(count / 60)}:${`${count % 60}`.padStart(2, '0')}`;
       instructionData.countColor = count === 0 ? colors.notification : colors.text;
     }
     switch (stepState) {
@@ -122,7 +128,7 @@ const Step = ({
     if (count) {
       setCount((prev) => {
         if (prev === 1) {
-          soundObject.current.playAsync();
+          alert();
         }
         return prev > 0 ? prev - 1 : 0;
       });
