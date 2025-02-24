@@ -50,6 +50,9 @@
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }
