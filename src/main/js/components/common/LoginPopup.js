@@ -1,17 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Pressable, View, StyleSheet, Text
+  Pressable, View, StyleSheet, Text, TextInput
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import RadioSelector from './RadioSelector';
 import { getUserId, setUserId } from '../../data/local';
 import { noop } from '../../common/fun';
-
-const OPTIONS = [
-  'eigil',
-  'eivin',
-  'test'
-];
+import { signInAnon } from '../../data/firebase';
 
 const LoginPopup = React.memo(({
   onSelected
@@ -21,32 +15,35 @@ const LoginPopup = React.memo(({
   const pressableStyles = createPressableStyles(theme);
   const [selected, setSelected] = useState('');
 
-  const onSave = useCallback(() => {
-    setUserId(selected).then(noop);
+  const onLogin = useCallback(() => {
+    signInAnon().then(() => setUserId(selected)).then(noop);
     onSelected(selected);
   }, [onSelected, selected]);
 
   useEffect(() => {
     (async () => {
       const userId = await getUserId();
-      setSelected(userId || OPTIONS[0]);
+      if (userId != null) {
+        setSelected(userId);
+      }
     })();
   }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.radio}>
-        <RadioSelector
-          items={OPTIONS}
-          selectedItem={selected}
-          onSelected={setSelected}
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={styles.input}
+          placeholder="User ID"
+          value={selected}
+          onChangeText={setSelected}
         />
       </View>
       <Pressable
         style={pressableStyles}
-        onPress={onSave}
+        onPress={onLogin}
       >
-        <Text style={styles.buttonText}>Select</Text>
+        <Text style={styles.buttonText}>Login</Text>
       </Pressable>
     </View>
   );
@@ -60,8 +57,16 @@ const createStyles = ({ colors }) => {
       alignItems: 'center',
       backgroundColor: colors.background
     },
-    radio: {
+    inputWrapper: {
       marginTop: 20
+    },
+    input: {
+      height: 40,
+      width: 200,
+      borderColor: colors.border,
+      borderWidth: 1,
+      borderRadius: 5,
+      backgroundColor: colors.background
     },
     button: {
     },
