@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import WorkoutScreen from './WorkoutScreen';
 import SwitchButton from './gadgets/SwitchButton';
+import LogoutButton from './gadgets/LogoutButton';
 import EditWorkoutScreen from './EditWorkoutScreen';
 
 const { Navigator, Screen } = createStackNavigator();
@@ -20,6 +22,7 @@ const appTheme = {
 const Root = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const toggleSwitch = () => setIsEditMode((previousState) => !previousState);
+  const styles = createStyles();
 
   return (
     <NavigationContainer theme={appTheme}>
@@ -34,11 +37,14 @@ const Root = () => {
           options={{
             title: 'InTheGym',
             headerRight: () => (
-              <SwitchButton
-                labels={['Use', 'Edit']}
-                isEnabled={isEditMode}
-                onToggleSwitch={toggleSwitch}
-              />
+              <View style={styles.headerRightWrapper}>
+                <LogoutButton />
+                <SwitchButton
+                  labels={['Use', 'Edit']}
+                  isEnabled={isEditMode}
+                  onToggleSwitch={toggleSwitch}
+                />
+              </View>
             ),
             ...getScreenHeaderStyles(appTheme)
           }}
@@ -74,6 +80,16 @@ const Root = () => {
 /*
  * STYLE
  */
+const createStyles = () => {
+  return StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
+    headerRightWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    }
+  });
+};
+
 const getScreenHeaderStyles = ({ colors }) => ({
   headerStyle: {
     backgroundColor: colors.background

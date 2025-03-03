@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { signOut } from '../../data/firebase';
 
-const Button = ({ text }) => {
+const LogoutButton = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const pressableStyles = createPressableStyles(theme);
@@ -13,16 +13,17 @@ const Button = ({ text }) => {
       style={pressableStyles}
       onPress={signOut}
     >
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text style={styles.buttonText}>Logout</Text>
     </Pressable>
   );
 };
 
 const createStyles = ({ colors }) => {
   return StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
     buttonText: {
       fontFamily: 'sans-serif',
-      fontSize: 24,
+      fontSize: 16,
       color: colors.text
     }
   });
@@ -31,22 +32,20 @@ const createStyles = ({ colors }) => {
 const createPressableStyles = ({ colors }) => ({ pressed }) => {
   if (pressed) {
     return {
-      marginTop: 20,
-      paddingVertical: 6,
-      paddingHorizontal: 24,
       borderWidth: 1,
       borderRadius: 5,
       borderColor: colors.border,
+      paddingHorizontal: 4,
+      marginRight: 24,
       backgroundColor: colors.primary
     };
   }
 
   return {
-    marginTop: 20,
-    paddingVertical: 6,
-    paddingHorizontal: 24,
+    paddingHorizontal: 4,
+    marginRight: 24,
     backgroundColor: colors.background
   };
 };
 
-export default Button;
+export default LogoutButton;
