@@ -4,7 +4,7 @@ import React, {
 import { StyleSheet, View } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import Steps, { mkSteps } from './Steps';
-import PopupDialog from './common/PopupDialog';
+import PopupDialog from './gadgets/PopupDialog';
 import Instruction from './Instruction';
 import Overview from './Overview';
 

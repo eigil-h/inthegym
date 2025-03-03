@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import WorkoutScreen from './WorkoutScreen';
-import SwitchButton from './common/SwitchButton';
+import SwitchButton from './gadgets/SwitchButton';
 import EditWorkoutScreen from './EditWorkoutScreen';
 
 const { Navigator, Screen } = createStackNavigator();

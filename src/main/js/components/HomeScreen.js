@@ -5,7 +5,7 @@ import {
 import { useTheme } from '@react-navigation/native';
 import loadHome, { updateWorkout } from '../data/firebase';
 import { noop } from '../common/fun';
-import LoginPopup from './common/LoginPopup';
+import LoginPopup from './gadgets/LoginPopup';
 import useAuth from '../hooks/useAuth';
 
 const NEW_WORKOUT = 'New Workout';
