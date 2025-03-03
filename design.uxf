@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.3.0">
-  <zoom_level>10</zoom_level>
+<diagram program="umlet" version="15.1">
+  <zoom_level>15</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>20</x>
-      <y>10</y>
-      <w>350</w>
-      <h>500</h>
+      <x>30</x>
+      <y>15</y>
+      <w>525</w>
+      <h>750</h>
     </coordinates>
     <panel_attributes>&lt;-    InTheGym - edit mode
 halign=left
@@ -19,10 +19,10 @@ halign=left
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>20</x>
-      <y>40</y>
-      <w>100</w>
-      <h>30</h>
+      <x>30</x>
+      <y>60</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>Ex#1</panel_attributes>
     <additional_attributes/>
@@ -30,10 +30,10 @@ halign=left
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>20</x>
-      <y>70</y>
-      <w>100</w>
-      <h>30</h>
+      <x>30</x>
+      <y>105</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>|Ex#2|
 bg=yellow</panel_attributes>
@@ -42,10 +42,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>20</x>
-      <y>470</y>
-      <w>100</w>
-      <h>30</h>
+      <x>30</x>
+      <y>705</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>add new
 lt=.</panel_attributes>
@@ -54,10 +54,10 @@ lt=.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>120</x>
-      <y>40</y>
-      <w>250</w>
-      <h>470</h>
+      <x>180</x>
+      <y>60</y>
+      <w>375</w>
+      <h>705</h>
     </coordinates>
     <panel_attributes>bg=yellow</panel_attributes>
     <additional_attributes/>
@@ -65,10 +65,10 @@ lt=.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>190</y>
-      <w>100</w>
-      <h>30</h>
+      <x>195</x>
+      <y>285</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 execution</panel_attributes>
@@ -77,10 +77,10 @@ execution</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>220</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>330</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 amount</panel_attributes>
@@ -89,10 +89,10 @@ amount</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>250</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>375</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 unit</panel_attributes>
@@ -101,10 +101,10 @@ unit</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>220</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>330</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 number</panel_attributes>
@@ -113,10 +113,10 @@ number</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>250</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>375</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 repeats |
@@ -126,10 +126,10 @@ seconds</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>50</y>
-      <w>100</w>
-      <h>30</h>
+      <x>195</x>
+      <y>75</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 load</panel_attributes>
@@ -138,10 +138,10 @@ load</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>80</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>120</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 amount</panel_attributes>
@@ -150,10 +150,10 @@ amount</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>110</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>165</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 unit</panel_attributes>
@@ -162,10 +162,10 @@ unit</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>140</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>210</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 increase by</panel_attributes>
@@ -174,10 +174,10 @@ increase by</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>80</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>120</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 number</panel_attributes>
@@ -186,10 +186,10 @@ number</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>110</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>165</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 string</panel_attributes>
@@ -198,10 +198,10 @@ string</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>140</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>210</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 number</panel_attributes>
@@ -210,10 +210,10 @@ number</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>300</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>450</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 sets</panel_attributes>
@@ -222,10 +222,10 @@ sets</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>300</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>450</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 number</panel_attributes>
@@ -234,10 +234,10 @@ number</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>150</x>
-      <y>330</y>
-      <w>100</w>
-      <h>30</h>
+      <x>225</x>
+      <y>495</y>
+      <w>150</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>lt=..
 wait</panel_attributes>
@@ -246,10 +246,10 @@ wait</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>250</x>
-      <y>330</y>
-      <w>90</w>
-      <h>30</h>
+      <x>375</x>
+      <y>495</y>
+      <w>135</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=gray
 number</panel_attributes>
@@ -258,10 +258,10 @@ number</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>410</y>
-      <w>60</w>
-      <h>30</h>
+      <x>270</x>
+      <y>615</y>
+      <w>90</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=blue
 save</panel_attributes>
@@ -270,10 +270,10 @@ save</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>190</y>
-      <w>230</w>
-      <h>100</h>
+      <x>195</x>
+      <y>285</y>
+      <w>345</w>
+      <h>150</h>
     </coordinates>
     <panel_attributes>lt=..</panel_attributes>
     <additional_attributes/>
@@ -281,10 +281,10 @@ save</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>50</y>
-      <w>230</w>
-      <h>130</h>
+      <x>195</x>
+      <y>75</y>
+      <w>345</w>
+      <h>195</h>
     </coordinates>
     <panel_attributes>lt=..</panel_attributes>
     <additional_attributes/>
@@ -292,13 +292,300 @@ save</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>260</x>
-      <y>410</y>
-      <w>60</w>
-      <h>30</h>
+      <x>390</x>
+      <y>615</y>
+      <w>90</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>bg=blue
 trash</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>615</x>
+      <y>15</y>
+      <w>525</w>
+      <h>750</h>
+    </coordinates>
+    <panel_attributes>InTheGym - login popup
+halign=left
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>705</x>
+      <y>90</y>
+      <w>135</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>bg=gray
+username</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>705</x>
+      <y>240</y>
+      <w>135</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=..
+login</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>705</x>
+      <y>165</y>
+      <w>135</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>bg=gray
+password</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>705</x>
+      <y>375</y>
+      <w>135</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=..
+Google</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>615</x>
+      <y>315</y>
+      <w>540</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;340.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>810</x>
+      <y>495</y>
+      <w>255</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>Firestore Anon vs Auth
+--
+user
+  name1
+  name2
+auser
+  userId1
+  userId2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1215</x>
+      <y>15</y>
+      <w>525</w>
+      <h>750</h>
+    </coordinates>
+    <panel_attributes>InTheGym - Home screen
+halign=left
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1215</x>
+      <y>210</y>
+      <w>540</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;340.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1395</x>
+      <y>75</y>
+      <w>150</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Edit mode
+switch</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1245</x>
+      <y>75</y>
+      <w>105</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Logout</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1245</x>
+      <y>285</y>
+      <w>150</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Workout#1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1245</x>
+      <y>390</y>
+      <w>150</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Workout#2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1245</x>
+      <y>495</y>
+      <w>150</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Workout#3</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1245</x>
+      <y>600</y>
+      <w>150</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Workout#4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1245</x>
+      <y>705</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>valign=center
+Workout#5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1425</x>
+      <y>300</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>valign=center
+halign=left
+lt=.
+Description</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1425</x>
+      <y>405</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>valign=center
+halign=left
+lt=.
+Description</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1425</x>
+      <y>510</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>valign=center
+halign=left
+lt=.
+Description</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1425</x>
+      <y>615</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>valign=center
+halign=left
+lt=.
+Description</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1425</x>
+      <y>720</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>valign=center
+halign=left
+lt=.
+Description</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1590</x>
+      <y>75</y>
+      <w>105</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>valign=center
+lt=.
+New
+Workout</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

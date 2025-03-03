@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
 import { Asset } from 'expo-asset';
 import { noop, useInterval } from '../common/fun';
-import PopupDialog from './common/PopupDialog';
+import PopupDialog from './gadgets/PopupDialog';
 import Alert from '../../../../assets/alert.mp3';
 
 const EXERCISE_STATE = {

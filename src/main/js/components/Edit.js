@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import RadioSelector from './common/RadioSelector';
+import RadioSelector from './gadgets/RadioSelector';
 
 const Edit = ({ exercise: original, onUpdate }) => {
   const theme = useTheme();

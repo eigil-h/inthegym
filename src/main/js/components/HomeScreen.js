@@ -2,45 +2,50 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   Text, Pressable, View, StyleSheet, TextInput
 } from 'react-native';
-import { useFocusEffect, useTheme } from '@react-navigation/native';
-import loadHome, { updateWorkout as fbUpdate } from '../data/firebase';
+import { useTheme } from '@react-navigation/native';
+import loadHome, { updateWorkout } from '../data/firebase';
 import { noop } from '../common/fun';
-import LoginPopup from './common/LoginPopup';
+import LoginPopup from './gadgets/LoginPopup';
+import useAuth from '../hooks/useAuth';
 
 const NEW_WORKOUT = 'New Workout';
 
 const HomeScreen = ({ navigation, isEditMode }) => {
   const styles = createStyles(useTheme());
   const pressableStyle = pressable(useTheme());
-  const [userId, setUserId] = useState(null);
+  const { user, loading } = useAuth();
   const [workouts, setWorkouts] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
 
   const newWorkout = useCallback(
     (title) => {
-      if (userId) {
-        fbUpdate(userId, title, { exercises: [] })
+      if (user) {
+        updateWorkout(user.uid, title, { exercises: [] })
           .then(setShouldReload(true));
       }
     },
-    [userId]
+    [user]
   );
 
   useEffect(() => {
-    if (shouldReload && userId) {
+    if (shouldReload && user) {
       setShouldReload(false);
-      loadHome(userId, setWorkouts).then(noop);
+      loadHome(user.uid, setWorkouts).then(noop);
     }
-  }, [shouldReload, userId]);
+  }, [shouldReload, user]);
 
-  useFocusEffect(() => {
-    if (userId) {
-      loadHome(userId, setWorkouts).then(noop);
+  useEffect(() => {
+    if (user && !isEditMode) {
+      loadHome(user.uid, setWorkouts).then(noop);
     }
-  });
+  }, [user, isEditMode]);
 
-  if (!userId) {
-    return (<LoginPopup onSelected={setUserId} />);
+  if (loading) {
+    return null;
+  }
+
+  if (!user) {
+    return (<LoginPopup />);
   }
 
   return (
@@ -60,7 +65,7 @@ const HomeScreen = ({ navigation, isEditMode }) => {
               navigation.navigate('EditWorkout', {
                 title,
                 exercises: workouts[title],
-                userId
+                userId: user.uid
               });
             } else {
               navigation.navigate('Workout', {
