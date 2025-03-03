@@ -1,42 +1,47 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Pressable, View, StyleSheet, Text, TextInput
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { getUserId, setUserId } from '../../data/local';
 import { noop } from '../../common/fun';
-import { signInAnon } from '../../data/firebase';
+import { signInAnon, signInWithEmailAndPassword } from '../../data/firebase';
 
-const LoginPopup = React.memo(({
-  onSelected
-}) => {
+const LoginPopup = React.memo(() => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const pressableStyles = createPressableStyles(theme);
-  const [selected, setSelected] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState();
 
   const onLogin = useCallback(() => {
-    signInAnon().then(() => setUserId(selected)).then(noop);
-    onSelected(selected);
-  }, [onSelected, selected]);
-
-  useEffect(() => {
-    (async () => {
-      const userId = await getUserId();
-      if (userId != null) {
-        setSelected(userId);
-      }
-    })();
-  }, []);
+    if (email && password) {
+      signInWithEmailAndPassword(email, password)
+        .then(noop)
+        .catch(setError);
+    } else {
+      signInAnon()
+        .then(noop)
+        .catch(setError);
+    }
+  }, [email, password]);
 
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
         <TextInput
           style={styles.input}
-          placeholder="User ID"
-          value={selected}
-          onChangeText={setSelected}
+          placeholder="Email or empty for anonymous"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
         />
       </View>
       <Pressable
@@ -45,6 +50,8 @@ const LoginPopup = React.memo(({
       >
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 });
@@ -74,6 +81,12 @@ const createStyles = ({ colors }) => {
       fontFamily: 'sans-serif',
       fontSize: 24,
       color: colors.text
+    },
+    errorText: {
+      fontFamily: 'serif',
+      fontSize: 24,
+      color: colors.error,
+      marginTop: 20
     }
   });
 };

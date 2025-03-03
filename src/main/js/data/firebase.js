@@ -1,5 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence, signInAnonymously } from 'firebase/auth';
+import {
+  initializeAuth,
+  getReactNativePersistence,
+  signInAnonymously,
+  signInWithEmailAndPassword as fbSignInWithEmailAndPassword,
+  signOut as fbSignOut
+} from 'firebase/auth';
 import {
   getFirestore,
   collection,
@@ -14,15 +20,32 @@ const app = initializeApp(Constants.expoConfig.web.config.firebase);
 const db = getFirestore(app);
 const auth = initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
 
-// eslint-disable-next-line consistent-return
 export const signInAnon = async () => {
   try {
-    const userCredential = await signInAnonymously(auth);
-    return userCredential.user;
+    await signInAnonymously(auth);
   } catch (error) {
-    console.error('Error:', error);
-    // Handle errors (e.g., alert the user or log analytics)
+    console.error('Error logging in anonymously:', error);
   }
+};
+
+export const signInWithEmailAndPassword = async (email, password) => {
+  try {
+    await fbSignInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error('Error logging in with email and password:', error);
+  }
+};
+
+export const signOut = async () => {
+  try {
+    await fbSignOut(auth);
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+};
+
+export const registerAuthStateChangeHandler = (handler) => {
+  return auth.onAuthStateChanged(handler);
 };
 
 const loadHome = async (userId, setter) => {
@@ -39,9 +62,8 @@ const loadHome = async (userId, setter) => {
 export const updateWorkout = async (userId, name, data) => {
   try {
     await setDoc(doc(db, `user/${userId}/workout`, name), data);
-    return true;
   } catch (e) {
-    return false;
+    console.error('Error updating workout:', e);
   }
 };
 
