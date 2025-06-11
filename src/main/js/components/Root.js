@@ -1,35 +1,32 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useColorScheme } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import WorkoutScreen from './WorkoutScreen';
 import SwitchButton from './gadgets/SwitchButton';
 import LogoutButton from './gadgets/LogoutButton';
 import EditWorkoutScreen from './EditWorkoutScreen';
+import createTheme from '../theme';
 
 const { Navigator, Screen } = createStackNavigator();
 
-const appTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#4fa'
-  }
-};
-
 const Root = () => {
+  const colorScheme = useColorScheme();
   const [isEditMode, setIsEditMode] = useState(false);
   const toggleSwitch = () => setIsEditMode((previousState) => !previousState);
-  const styles = createStyles();
+  
+  // Create theme based on system color scheme
+  const theme = createTheme(colorScheme === 'dark');
+  const styles = createStyles(theme);
 
   return (
-    <NavigationContainer theme={appTheme}>
+    <NavigationContainer theme={theme}>
       <Navigator
         screenOptions={{
           headerStyle: { elevation: 0 },
-          cardStyle: { backgroundColor: appTheme.colors.background }
+          cardStyle: { backgroundColor: theme.colors.background }
         }}
       >
         <Screen
@@ -46,7 +43,7 @@ const Root = () => {
                 />
               </View>
             ),
-            ...getScreenHeaderStyles(appTheme)
+            ...getScreenHeaderStyles(theme)
           }}
         >
           {(props) => (
@@ -61,7 +58,7 @@ const Root = () => {
           component={WorkoutScreen}
           options={({ route }) => ({
             title: `${route.params.title}`,
-            ...getScreenHeaderStyles(appTheme)
+            ...getScreenHeaderStyles(theme)
           })}
         />
         <Screen
@@ -69,7 +66,7 @@ const Root = () => {
           component={EditWorkoutScreen}
           options={({ route }) => ({
             title: `${route.params.title}`,
-            ...getScreenHeaderStyles(appTheme)
+            ...getScreenHeaderStyles(theme)
           })}
         />
       </Navigator>
@@ -77,27 +74,25 @@ const Root = () => {
   );
 };
 
-/*
- * STYLE
- */
-const createStyles = () => {
-  return StyleSheet.create({
-    // eslint-disable-next-line react-native/no-unused-styles
-    headerRightWrapper: {
-      flexDirection: 'row',
-      alignItems: 'center'
-    }
-  });
-};
+const createStyles = (theme) => StyleSheet.create({
+  headerRightWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: theme.spacing.md
+  }
+});
 
-const getScreenHeaderStyles = ({ colors }) => ({
+const getScreenHeaderStyles = (theme) => ({
   headerStyle: {
-    backgroundColor: colors.background
+    backgroundColor: theme.colors.background,
+    elevation: 0,
+    shadowOpacity: 0
   },
-  headerTintColor: colors.text,
+  headerTintColor: theme.colors.text.primary,
   headerTitleStyle: {
-    fontFamily: 'serif',
-    fontWeight: '400'
+    fontFamily: theme.typography.families.heading,
+    fontSize: theme.typography.sizes.lg,
+    fontWeight: theme.typography.weights.semibold
   }
 });
 

@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
 import { Asset } from 'expo-asset';
 import { noop, useInterval } from '../common/fun';
@@ -158,23 +157,22 @@ const ForwardButton = ({ onPress }) => {
   const styles = createStyles(theme);
 
   return (
-    <LinearGradient
-      colors={[colors.background, colors.card, colors.card, colors.background]}
-      locations={[0.0, 0.1, 0.9, 1.0]}
+    <Pressable 
       style={styles.fill}
+      onPress={onPress}
     >
-      <Pressable
-        onPress={onPress}
-        style={pressableStyle}
-      >
-        {({ pressed }) => (
-          <Ionicons
-            name="arrow-forward"
-            style={[styles.pressIcon, pressed ? styles.pressedIcon : null]}
-          />
-        )}
-      </Pressable>
-    </LinearGradient>
+      <View style={styles.buttonWrapper}>
+        <View style={styles.visualButton}>
+          <View style={styles.iconWrapper}>
+            <Ionicons
+              name="play-skip-forward"
+              style={styles.pressIcon}
+            />
+          </View>
+        </View>
+        <Text style={styles.label}>NEXT</Text>
+      </View>
+    </Pressable>
   );
 };
 
@@ -199,47 +197,46 @@ export const mkSteps = (exercise) => {
 /*
  * STYLE
  */
-const createStyles = ({ colors }) => {
+const createStyles = (theme) => {
   const styles = {
+    fill: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: theme.colors.background
+    },
+    buttonWrapper: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    visualButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: theme.colors.primary
+    },
+    iconWrapper: {
+      width: 120,
+      height: 120,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     pressIcon: {
-      color: colors.background,
-      fontSize: 156,
+      color: '#FFFFFF',
+      fontSize: 64,
       textAlign: 'center'
     },
-    pressedIcon: {
-      color: colors.text
-    },
-    fill: {
-      ...StyleSheet.absoluteFillObject
-    },
-    description: {
-      padding: 10,
-      fontSize: 18,
-      fontStyle: 'italic'
-    },
-    series: {
-      fontSize: 24,
-      color: colors.notification
-    },
-    countDown: {
-      fontSize: 24,
-      color: colors.primary
-    },
-    countUp: {
-      position: 'absolute',
-      fontSize: 24,
-      color: colors.background,
-      marginTop: 26,
-      marginLeft: 45
+    label: {
+      marginTop: 16,
+      color: theme.colors.text,
+      fontSize: 16,
+      fontWeight: '600',
+      letterSpacing: 2
     }
   };
 
   return StyleSheet.create(styles);
 };
-
-const pressableStyle = () => [{
-  flex: 1,
-  justifyContent: 'center'
-}];
 
 export default Steps;

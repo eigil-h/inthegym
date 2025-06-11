@@ -15,7 +15,8 @@ const PopupDialog = ({
   cancelText = 'No',
   type = 'choice' // 'choice', 'message', or 'error'
 }) => {
-  const styles = createStyles(useTheme());
+  const theme = useTheme();
+  const styles = createStyles(theme);
   const isError = type === 'error';
 
   return (
@@ -25,60 +26,67 @@ const PopupDialog = ({
       transparent
       onRequestClose={onCancel}
     >
-      <View style={[styles.contentWrapper, isError && styles.errorWrapper]}>
-        {isError && (
-          <View style={styles.errorIconContainer}>
-            <MaterialIcons name="error" size={32} color="#FF4444" />
-          </View>
-        )}
-        <Text style={[styles.title, isError && styles.errorTitle]}>{title}</Text>
-        <Text style={[styles.message, isError && styles.errorMessage]}>{message}</Text>
-        <View style={styles.buttons}>
-          {type === 'choice' ? (
-            <>
+      <View style={styles.overlay}>
+        <View style={[styles.contentWrapper, isError && styles.errorWrapper]}>
+          {isError && (
+            <View style={styles.errorIconContainer}>
+              <MaterialIcons name="error" size={32} color={theme.colors.error} />
+            </View>
+          )}
+          <Text style={[styles.title, isError && styles.errorTitle]}>{title}</Text>
+          <Text style={[styles.message, isError && styles.errorMessage]}>{message}</Text>
+          <View style={styles.buttons}>
+            {type === 'choice' ? (
+              <>
+                <Pressable
+                  style={[styles.button, styles.buttonChoice]}
+                  onPress={onConfirm}
+                >
+                  <Text style={styles.buttonText}>{confirmText}</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonChoice]}
+                  onPress={onCancel}
+                >
+                  <Text style={styles.buttonText}>{cancelText}</Text>
+                </Pressable>
+              </>
+            ) : (
               <Pressable
-                style={[styles.button, styles.buttonChoice]}
+                style={[
+                  styles.button,
+                  styles.buttonMessage,
+                  isError && styles.errorButton
+                ]}
                 onPress={onConfirm}
               >
-                <Text style={styles.buttonText}>{confirmText}</Text>
+                <Text style={[styles.buttonText, isError && styles.errorButtonText]}>
+                  {isError ? 'OK' : confirmText}
+                </Text>
               </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonChoice]}
-                onPress={onCancel}
-              >
-                <Text style={styles.buttonText}>{cancelText}</Text>
-              </Pressable>
-            </>
-          ) : (
-            <Pressable
-              style={[
-                styles.button,
-                styles.buttonMessage,
-                isError && styles.errorButton
-              ]}
-              onPress={onConfirm}
-            >
-              <Text style={styles.buttonText}>{isError ? 'OK' : confirmText}</Text>
-            </Pressable>
-          )}
+            )}
+          </View>
         </View>
       </View>
     </Modal>
   );
 };
 
-const createStyles = ({ colors }) => {
+const createStyles = (theme) => {
+  const { colors, spacing, borderRadius } = theme;
+
   const styles = {
-    contentWrapper: {
+    overlay: {
       flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
       justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
-      marginBottom: '50%',
-      marginHorizontal: 42,
+      alignItems: 'center'
+    },
+    contentWrapper: {
+      width: '85%',
       backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 35,
+      borderRadius: borderRadius.lg,
+      padding: spacing.xl,
       shadowColor: colors.border,
       shadowOffset: {
         width: 0,
@@ -90,60 +98,63 @@ const createStyles = ({ colors }) => {
     },
     errorWrapper: {
       borderWidth: 1,
-      borderColor: '#FF4444',
+      borderColor: colors.error
     },
     errorIconContainer: {
-      marginBottom: 15,
-      alignItems: 'center',
+      marginBottom: spacing.md,
+      alignItems: 'center'
     },
     buttons: {
       flexDirection: 'row',
       justifyContent: 'space-evenly',
       alignItems: 'center',
       width: '100%',
-      marginTop: 20
+      marginTop: spacing.lg
     },
     button: {
-      borderRadius: 8,
-      padding: 12,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
       elevation: 2,
       minWidth: 100,
       backgroundColor: colors.primary
     },
     buttonChoice: {
       flex: 1,
-      marginHorizontal: 10
+      marginHorizontal: spacing.sm
     },
     buttonMessage: {
       minWidth: 200
     },
     errorButton: {
-      backgroundColor: '#FF4444',
+      backgroundColor: colors.error
     },
     buttonText: {
-      color: colors.text,
+      color: '#FFFFFF',
       fontSize: 16,
       fontWeight: '600',
       textAlign: 'center'
     },
+    errorButtonText: {
+      color: '#FFFFFF'
+    },
     title: {
-      marginBottom: 15,
+      marginBottom: spacing.md,
       fontSize: 20,
       fontWeight: 'bold',
       textAlign: 'center',
       color: colors.text
     },
     errorTitle: {
-      color: '#FF4444',
+      color: colors.error
     },
     message: {
-      marginBottom: 15,
+      marginBottom: spacing.md,
       fontSize: 16,
       textAlign: 'center',
       color: colors.text
     },
     errorMessage: {
-      color: '#FF4444',
+      color: colors.text
     }
   };
 
