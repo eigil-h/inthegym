@@ -151,9 +151,20 @@ const Step = ({
   );
 };
 
+/**
+ * ForwardButton - A large, easily tappable next button for workout navigation
+ * 
+ * Design Decisions:
+ * - Full screen width pressable area for easy tapping during workouts
+ * - Centered visual indicator (120x120px) for clear affordance
+ * - Clean, iOS-style circular button with play-skip-forward icon
+ * - High contrast colors for visibility during exercise
+ * - "NEXT" label for explicit action description
+ * 
+ * @param {Function} onPress - Callback function when button is pressed
+ */
 const ForwardButton = ({ onPress }) => {
   const theme = useTheme();
-  const { colors } = theme;
   const styles = createStyles(theme);
 
   return (
