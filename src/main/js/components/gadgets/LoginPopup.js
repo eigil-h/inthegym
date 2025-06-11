@@ -5,6 +5,7 @@ import {
 import { useTheme } from '@react-navigation/native';
 import { noop } from '../../common/fun';
 import { signInAnon, signInWithEmailAndPassword } from '../../data/firebase';
+import PopupDialog from './PopupDialog';
 
 const LoginPopup = React.memo(() => {
   const theme = useTheme();
@@ -12,17 +13,17 @@ const LoginPopup = React.memo(() => {
   const pressableStyles = createPressableStyles(theme);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
 
   const onLogin = useCallback(() => {
     if (email && password) {
       signInWithEmailAndPassword(email, password)
         .then(noop)
-        .catch(setError);
+        .catch((err) => setError(err.message));
     } else {
       signInAnon()
         .then(noop)
-        .catch(setError);
+        .catch((err) => setError(err.message));
     }
   }, [email, password]);
 
@@ -39,6 +40,7 @@ const LoginPopup = React.memo(() => {
       <View style={styles.inputWrapper}>
         <TextInput
           style={styles.input}
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -51,65 +53,47 @@ const LoginPopup = React.memo(() => {
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
 
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      <PopupDialog
+        isVisible={error !== null}
+        type="error"
+        title="Login Error"
+        message={error || ''}
+        onConfirm={() => setError(null)}
+      />
     </View>
   );
 });
 
-const createStyles = ({ colors }) => {
-  return StyleSheet.create({
-    container: {
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: colors.background
-    },
-    inputWrapper: {
-      marginTop: 20
-    },
-    input: {
-      height: 40,
-      width: 200,
-      borderColor: colors.border,
-      borderWidth: 1,
-      borderRadius: 5,
-      backgroundColor: colors.background
-    },
-    button: {
-    },
-    buttonText: {
-      fontFamily: 'sans-serif',
-      fontSize: 24,
-      color: colors.text
-    },
-    errorText: {
-      fontFamily: 'serif',
-      fontSize: 24,
-      color: colors.error,
-      marginTop: 20
-    }
-  });
-};
-
-const createPressableStyles = ({ colors }) => ({ pressed }) => {
-  if (pressed) {
-    return {
-      marginTop: 20,
-      paddingVertical: 6,
-      paddingHorizontal: 24,
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: colors.border,
-      backgroundColor: colors.primary
-    };
+const createStyles = ({ colors }) => StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
+  },
+  inputWrapper: {
+    width: '100%',
+    marginBottom: 15
+  },
+  input: {
+    backgroundColor: colors.card,
+    borderRadius: 8,
+    padding: 12,
+    color: colors.text
+  },
+  buttonText: {
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: '600'
   }
+});
 
-  return {
-    marginTop: 20,
-    paddingVertical: 6,
-    paddingHorizontal: 24,
-    backgroundColor: colors.background
-  };
-};
+const createPressableStyles = ({ colors }) => ({
+  backgroundColor: colors.primary,
+  paddingVertical: 12,
+  paddingHorizontal: 24,
+  borderRadius: 8,
+  marginTop: 10
+});
 
 export default LoginPopup;

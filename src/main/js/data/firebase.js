@@ -20,11 +20,32 @@ const app = initializeApp(Constants.expoConfig.web.config.firebase);
 const db = getFirestore(app);
 const auth = initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });
 
+// Helper to format Firebase error messages
+const getErrorMessage = (error) => {
+  switch (error.code) {
+    case 'auth/invalid-email':
+      return 'Invalid email address format.';
+    case 'auth/user-disabled':
+      return 'This account has been disabled.';
+    case 'auth/user-not-found':
+      return 'No account found with this email.';
+    case 'auth/wrong-password':
+      return 'Incorrect password.';
+    case 'auth/network-request-failed':
+      return 'Network error. Please check your connection.';
+    case 'permission-denied':
+      return 'You don\'t have permission to perform this action.';
+    default:
+      return error.message || 'An unexpected error occurred.';
+  }
+};
+
 export const signInAnon = async () => {
   try {
     await signInAnonymously(auth);
   } catch (error) {
     console.error('Error logging in anonymously:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
@@ -33,6 +54,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
     await fbSignInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error('Error logging in with email and password:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
@@ -41,6 +63,7 @@ export const signOut = async () => {
     await fbSignOut(auth);
   } catch (error) {
     console.error('Error logging out:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
@@ -49,21 +72,25 @@ export const registerAuthStateChangeHandler = (handler) => {
 };
 
 const loadHome = async (userId, setter) => {
-  const workoutSnap = await getDocs(collection(db, `user/${userId}/workout`));
-  const docs = {};
-  workoutSnap.forEach((doc_) => {
-    docs[doc_.id] = doc_.data()?.exercises;
-  });
-
-  setter(docs);
-  // setter(testData);
+  try {
+    const workoutSnap = await getDocs(collection(db, `user/${userId}/workout`));
+    const docs = {};
+    workoutSnap.forEach((doc_) => {
+      docs[doc_.id] = doc_.data()?.exercises;
+    });
+    setter(docs);
+  } catch (error) {
+    console.error('Error loading workouts:', error);
+    throw new Error(getErrorMessage(error));
+  }
 };
 
 export const updateWorkout = async (userId, name, data) => {
   try {
     await setDoc(doc(db, `user/${userId}/workout`, name), data);
-  } catch (e) {
-    console.error('Error updating workout:', e);
+  } catch (error) {
+    console.error('Error updating workout:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 

@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   Text, Pressable, View, StyleSheet, TextInput
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useFocusEffect } from '@react-navigation/native';
 import loadHome, { updateWorkout } from '../data/firebase';
-import { noop } from '../common/fun';
 import LoginPopup from './gadgets/LoginPopup';
 import useAuth from '../hooks/useAuth';
+import PopupDialog from './gadgets/PopupDialog';
 
 const NEW_WORKOUT = 'New Workout';
 
@@ -16,29 +16,49 @@ const HomeScreen = ({ navigation, isEditMode }) => {
   const { user, loading } = useAuth();
   const [workouts, setWorkouts] = useState([]);
   const [shouldReload, setShouldReload] = useState(false);
+  const [error, setError] = useState(null);
 
   const newWorkout = useCallback(
     (title) => {
       if (user) {
         updateWorkout(user.uid, title, { exercises: [] })
-          .then(setShouldReload(true));
+          .then(() => setShouldReload(true))
+          .catch((err) => setError(err.message));
       }
     },
     [user]
   );
 
+  const loadWorkouts = useCallback(async () => {
+    if (user) {
+      try {
+        await loadHome(user.uid, setWorkouts);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  }, [user]);
+
+  // Reload data when returning to this screen
+  useFocusEffect(
+    useCallback(() => {
+      console.log('HomeScreen focused, reloading data...');
+      loadWorkouts();
+    }, [loadWorkouts])
+  );
+
   useEffect(() => {
     if (shouldReload && user) {
       setShouldReload(false);
-      loadHome(user.uid, setWorkouts).then(noop);
+      loadWorkouts();
     }
-  }, [shouldReload, user]);
+  }, [shouldReload, user, loadWorkouts]);
 
   useEffect(() => {
     if (user && !isEditMode) {
-      loadHome(user.uid, setWorkouts).then(noop);
+      loadWorkouts();
     }
-  }, [user, isEditMode]);
+  }, [user, isEditMode, loadWorkouts]);
 
   if (loading) {
     return null;
@@ -49,7 +69,7 @@ const HomeScreen = ({ navigation, isEditMode }) => {
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.container}>
       {isEditMode && (
       <NewWorkout
         styles={styles}
@@ -81,6 +101,13 @@ const HomeScreen = ({ navigation, isEditMode }) => {
           </View>
         </Pressable>
       ))}
+      <PopupDialog
+        isVisible={error !== null}
+        type="error"
+        title="Error"
+        message={error || ''}
+        onConfirm={() => setError(null)}
+      />
     </View>
   );
 };
@@ -130,7 +157,7 @@ const NewWorkout = ({
  */
 const createStyles = ({ colors }) => {
   const styles = {
-    screen: {
+    container: {
       flexDirection: 'row',
       flexWrap: 'wrap'
     },

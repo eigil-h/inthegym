@@ -5,9 +5,9 @@ import {
   Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { noop } from '../common/fun';
 import Edit from './Edit';
 import { updateWorkout as fbUpdate } from '../data/firebase';
+import PopupDialog from './gadgets/PopupDialog';
 
 const TEMPLATE = {
   title: 'a name',
@@ -24,6 +24,8 @@ const TEMPLATE = {
   pause: 30
 };
 
+const createNewExercise = () => JSON.parse(JSON.stringify(TEMPLATE));
+
 const EditWorkoutScreen = React.memo(({
   route: {
     params: {
@@ -38,37 +40,60 @@ const EditWorkoutScreen = React.memo(({
   const pressableStyle = pressable(theme);
   const [exercises, setExercises] = useState(existingExercises);
   const [selected, setSelected] = useState(exercises[0]);
+  const [lastSavedExercises, setLastSavedExercises] = useState(existingExercises);
+  const [error, setError] = useState(null);
 
   const addExercise = useCallback(
     () => {
-      setExercises((prev) => [...prev, TEMPLATE]);
-      setSelected(TEMPLATE);
+      console.log('Adding new exercise');
+      const newExercise = createNewExercise();
+      setExercises((prev) => [...prev, newExercise]);
+      setSelected(newExercise);
     },
     []
   );
 
   const updateExercise = useCallback(
-    (prevTitle, exercise) => setExercises(
-      (prev) => prev
-        .filter((ex) => !(ex.title === prevTitle && exercise === null))
-        .map((ex) => (ex.title === prevTitle ? exercise : ex))
-    ),
+    (prevTitle, exercise) => {
+      console.log('Updating exercise', { prevTitle, exercise });
+      setExercises(
+        (prev) => prev
+          .filter((ex) => !(ex.title === prevTitle && exercise === null))
+          .map((ex) => (ex.title === prevTitle ? exercise : ex))
+      );
+    },
     []
   );
 
   useEffect(() => setExercises(existingExercises), [existingExercises]);
 
-  useEffect(
-    () => {
+  // Separate effect for handling exercise selection
+  useEffect(() => {
+    const current = exercises.find((ex) => ex.title === selected?.title);
+    if (!current) {
+      console.log('Selected exercise not found, resetting selection');
+      setSelected(exercises?.[0]);
+    }
+  }, [exercises, selected]);
+
+  // Separate effect for Firebase updates
+  useEffect(() => {
+    // Only update Firebase if exercises have actually changed
+    if (JSON.stringify(exercises) !== JSON.stringify(lastSavedExercises)) {
+      console.log('Saving exercises to Firebase:', exercises);
       fbUpdate(userId, workoutTitle, { exercises })
-        .then(noop);
-      const current = exercises.find((ex) => ex.title === selected?.title);
-      if (!current) {
-        setSelected(exercises?.[0]);
-      }
-    },
-    [exercises, selected, userId, workoutTitle]
-  );
+        .then(() => {
+          console.log('Successfully saved exercises');
+          setLastSavedExercises(exercises);
+        })
+        .catch((err) => {
+          console.error('Failed to save exercises:', err);
+          setError(err.message);
+          // Revert to last saved state if save fails
+          setExercises(lastSavedExercises);
+        });
+    }
+  }, [exercises, userId, workoutTitle, lastSavedExercises]);
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -94,6 +119,14 @@ const EditWorkoutScreen = React.memo(({
           />
         ) : <View />}
       </View>
+
+      <PopupDialog
+        isVisible={error !== null}
+        type="error"
+        title="Save Error"
+        message={error || ''}
+        onConfirm={() => setError(null)}
+      />
     </SafeAreaView>
   );
 });
