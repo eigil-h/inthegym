@@ -2,9 +2,21 @@ import React, {
   useCallback, useEffect, useRef, useState
 } from 'react';
 import {
+  Platform,
   Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler
+} from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  runOnJS
+} from 'react-native-reanimated';
 import Edit from './Edit';
 import { updateWorkout as fbUpdate } from '../data/firebase';
 import PopupDialog from './gadgets/PopupDialog';
@@ -65,9 +77,16 @@ const EditWorkoutScreen = React.memo(({
     []
   );
 
+  const handleReorder = useCallback((from, to) => {
+    if (from === to) return;
+    const newExercises = [...exercises];
+    const [removed] = newExercises.splice(from, 1);
+    newExercises.splice(to, 0, removed);
+    setExercises(newExercises);
+  }, [exercises]);
+
   useEffect(() => setExercises(existingExercises), [existingExercises]);
 
-  // Separate effect for handling exercise selection
   useEffect(() => {
     const current = exercises.find((ex) => ex.title === selected?.title);
     if (!current) {
@@ -76,9 +95,7 @@ const EditWorkoutScreen = React.memo(({
     }
   }, [exercises, selected]);
 
-  // Separate effect for Firebase updates
   useEffect(() => {
-    // Only update Firebase if exercises have actually changed
     if (JSON.stringify(exercises) !== JSON.stringify(lastSavedExercises)) {
       console.log('Saving exercises to Firebase:', exercises);
       fbUpdate(userId, workoutTitle, { exercises })
@@ -89,45 +106,47 @@ const EditWorkoutScreen = React.memo(({
         .catch((err) => {
           console.error('Failed to save exercises:', err);
           setError(err.message);
-          // Revert to last saved state if save fails
           setExercises(lastSavedExercises);
         });
     }
   }, [exercises, userId, workoutTitle, lastSavedExercises]);
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <View style={styles.leftBar}>
-        <Tabs
-          styles={styles}
-          exercises={exercises}
-          selected={selected}
-          onSelected={setSelected}
-        />
-        <Pressable
-          style={[styles.newButton, pressableStyle]}
-          onPress={addExercise}
-        >
-          <Text style={styles.newButtonText}>New exercise</Text>
-        </Pressable>
-      </View>
-      <View style={styles.main}>
-        {selected ? (
-          <Edit
-            exercise={selected}
-            onUpdate={updateExercise}
+    <GestureHandlerRootView style={styles.gestureRoot}>
+      <SafeAreaView style={styles.wrapper}>
+        <View style={styles.leftBar}>
+          <Tabs
+            styles={styles}
+            exercises={exercises}
+            selected={selected}
+            onSelected={setSelected}
+            onReorder={handleReorder}
           />
-        ) : <View />}
-      </View>
+          <Pressable
+            style={[styles.newButton, pressableStyle]}
+            onPress={addExercise}
+          >
+            <Text style={styles.newButtonText}>New exercise</Text>
+          </Pressable>
+        </View>
+        <View style={styles.main}>
+          {selected ? (
+            <Edit
+              exercise={selected}
+              onUpdate={updateExercise}
+            />
+          ) : <View />}
+        </View>
 
-      <PopupDialog
-        isVisible={error !== null}
-        type="error"
-        title="Save Error"
-        message={error || ''}
-        onConfirm={() => setError(null)}
-      />
-    </SafeAreaView>
+        <PopupDialog
+          isVisible={error !== null}
+          type="error"
+          title="Save Error"
+          message={error || ''}
+          onConfirm={() => setError(null)}
+        />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 });
 
@@ -135,17 +154,18 @@ const Tabs = React.memo(({
   styles,
   exercises,
   selected,
-  onSelected
+  onSelected,
+  onReorder
 }) => {
   const scrollRef = useRef();
   const [height, setHeight] = useState(0);
   const [selectedY, setSelectedY] = useState(0);
+  const [draggingIndex, setDraggingIndex] = useState(-1);
 
   const selectedHandler = useCallback((exercise, y) => {
     setSelectedY(y);
     onSelected(exercise);
-  },
-  [onSelected]);
+  }, [onSelected]);
 
   const layoutHandler = useCallback(
     ({ nativeEvent }) => setHeight(nativeEvent.layout.height),
@@ -168,13 +188,18 @@ const Tabs = React.memo(({
       contentContainerStyle={styles.tabs}
       showsVerticalScrollIndicator={false}
     >
-      {exercises.map((ex) => (
+      {exercises.map((ex, index) => (
         <Tab
           key={ex.title}
           styles={styles}
           exercise={ex}
           isSelected={ex === selected}
           onSelected={selectedHandler}
+          index={index}
+          onDragStart={() => setDraggingIndex(index)}
+          onDragEnd={() => setDraggingIndex(-1)}
+          isDragging={index === draggingIndex}
+          onReorder={onReorder}
         />
       ))}
     </ScrollView>
@@ -185,9 +210,60 @@ const Tab = React.memo(({
   styles,
   exercise,
   isSelected,
-  onSelected
+  onSelected,
+  index,
+  onDragStart,
+  onDragEnd,
+  isDragging,
+  onReorder
 }) => {
   const [y, setY] = useState(0);
+  const translateY = useSharedValue(0);
+  const { colors } = useTheme();
+
+  const onLayout = useCallback((event) => {
+    const { y: layoutY } = event.nativeEvent.layout;
+    setY(layoutY);
+  }, []);
+
+  const panGesture = useAnimatedGestureHandler({
+    onStart: () => {
+      runOnJS(onDragStart)();
+    },
+    onActive: (event) => {
+      translateY.value = event.translationY;
+      const newIndex = Math.floor((y + event.translationY) / 50); // Approximate height of a tab
+      if (newIndex !== index && newIndex >= 0) {
+        runOnJS(onReorder)(index, newIndex);
+      }
+    },
+    onEnd: () => {
+      translateY.value = withSpring(0);
+      runOnJS(onDragEnd)();
+    },
+  });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const baseStyle = {
+      transform: [{ translateY: translateY.value }],
+      zIndex: isDragging ? 1 : 0
+    };
+
+    if (Platform.OS === 'ios') {
+      return {
+        ...baseStyle,
+        shadowColor: colors.border,
+        shadowOffset: isDragging ? { width: 0, height: 2 } : { width: 0, height: 0 },
+        shadowOpacity: isDragging ? 0.25 : 0,
+        shadowRadius: isDragging ? 3.84 : 0
+      };
+    }
+    return {
+      ...baseStyle,
+      elevation: isDragging ? 5 : 0
+    };
+  });
+
   const renderText = useCallback(() => (
     <Text
       style={styles.tabText}
@@ -199,21 +275,23 @@ const Tab = React.memo(({
   ), [exercise.title, styles.tabText]);
 
   return (
-    <View onLayout={({ nativeEvent }) => setY(nativeEvent.layout.y)}>
-      {(isSelected ? (
-        <View style={[styles.tab, styles.selectedTab]}>
-          {renderText()}
-        </View>
-      ) : (
-        <Pressable
-          key={exercise.title}
-          onPress={() => onSelected(exercise, y)}
-          style={styles.tab}
-        >
-          {renderText()}
-        </Pressable>
-      ))}
-    </View>
+    <PanGestureHandler onGestureEvent={panGesture}>
+      <Animated.View style={animatedStyle} onLayout={onLayout}>
+        {isSelected ? (
+          <View style={[styles.tab, styles.selectedTab]}>
+            {renderText()}
+          </View>
+        ) : (
+          <Pressable
+            key={exercise.title}
+            onPress={() => onSelected(exercise, y)}
+            style={styles.tab}
+          >
+            {renderText()}
+          </Pressable>
+        )}
+      </Animated.View>
+    </PanGestureHandler>
   );
 });
 
@@ -222,6 +300,9 @@ const Tab = React.memo(({
  */
 const createStyles = ({ colors }) => {
   const styles = {
+    gestureRoot: {
+      flex: 1
+    },
     wrapper: {
       flex: 1,
       flexDirection: 'row',
