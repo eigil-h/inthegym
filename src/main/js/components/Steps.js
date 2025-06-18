@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View, Text } from 'react-native';
+import {
+  Pressable, StyleSheet, View, Text
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
@@ -153,14 +155,14 @@ const Step = ({
 
 /**
  * ForwardButton - A large, easily tappable next button for workout navigation
- * 
+ *
  * Design Decisions:
  * - Full screen width pressable area for easy tapping during workouts
  * - Centered visual indicator (120x120px) for clear affordance
  * - Clean, iOS-style circular button with play-skip-forward icon
  * - High contrast colors for visibility during exercise
  * - "NEXT" label for explicit action description
- * 
+ *
  * @param {Function} onPress - Callback function when button is pressed
  */
 const ForwardButton = ({ onPress }) => {
@@ -168,7 +170,7 @@ const ForwardButton = ({ onPress }) => {
   const styles = createStyles(theme);
 
   return (
-    <Pressable 
+    <Pressable
       style={styles.fill}
       onPress={onPress}
     >

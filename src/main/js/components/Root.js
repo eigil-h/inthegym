@@ -16,7 +16,7 @@ const Root = () => {
   const colorScheme = useColorScheme();
   const [isEditMode, setIsEditMode] = useState(false);
   const toggleSwitch = () => setIsEditMode((previousState) => !previousState);
-  
+
   // Create theme based on system color scheme
   const theme = createTheme(colorScheme === 'dark');
   const styles = createStyles(theme);
@@ -75,6 +75,7 @@ const Root = () => {
 };
 
 const createStyles = (theme) => StyleSheet.create({
+  // eslint-disable-next-line react-native/no-unused-styles
   headerRightWrapper: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -106,4 +106,4 @@ const createTheme = (isDark = false) => {
   };
 };
 
-export default createTheme; 
+export default createTheme;
