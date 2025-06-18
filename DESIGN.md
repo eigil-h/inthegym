@@ -80,7 +80,7 @@ Modals and dialogs follow these principles:
 - Firestore database organization:
   - Root collection: `user`
   - Per-user subcollection: `workout`
-  - Each workout document contains exercise data
+  - Each workout is a separate document containing exercise data
 
 ### Data Operations
 - Read operations:
@@ -89,6 +89,10 @@ Modals and dialogs follow these principles:
 - Write operations:
   - Workout updates through `updateWorkout` function
   - Document creation/updates using `setDoc`
+  - Automatic workout deletion when navigating back from empty workouts
+    - Improves UX by cleaning up without explicit delete action
+    - Implemented in EditWorkoutScreen using `beforeRemove` navigation handler
+    - Uses `deleteDoc` to remove the workout document from Firestore
 
 ### Error Handling
 - Comprehensive error handling with specific error codes

@@ -18,7 +18,7 @@ import Animated, {
   runOnJS
 } from 'react-native-reanimated';
 import Edit from './Edit';
-import { updateWorkout as fbUpdate } from '../data/firebase';
+import { updateWorkout as fbUpdate, deleteWorkout } from '../data/firebase';
 import PopupDialog from './gadgets/PopupDialog';
 
 const TEMPLATE = {
@@ -39,6 +39,7 @@ const TEMPLATE = {
 const createNewExercise = () => JSON.parse(JSON.stringify(TEMPLATE));
 
 const EditWorkoutScreen = React.memo(({
+  navigation,
   route: {
     params: {
       exercises: existingExercises,
@@ -54,6 +55,26 @@ const EditWorkoutScreen = React.memo(({
   const [selected, setSelected] = useState(exercises[0]);
   const [lastSavedExercises, setLastSavedExercises] = useState(existingExercises);
   const [error, setError] = useState(null);
+
+  // Add effect to handle empty workout deletion on navigation
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', async (e) => {
+      if (exercises.length === 0) {
+        // Prevent default navigation behavior
+        e.preventDefault();
+        try {
+          // Delete the empty workout document
+          await deleteWorkout(userId, workoutTitle);
+          // Then continue with navigation
+          navigation.dispatch(e.data.action);
+        } catch (err) {
+          setError(err.message);
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, exercises.length, userId, workoutTitle]);
 
   const addExercise = useCallback(
     () => {

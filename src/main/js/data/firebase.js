@@ -11,7 +11,8 @@ import {
   collection,
   getDocs,
   setDoc,
-  doc
+  doc,
+  deleteDoc
 } from 'firebase/firestore';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -90,6 +91,15 @@ export const updateWorkout = async (userId, name, data) => {
     await setDoc(doc(db, `user/${userId}/workout`, name), data);
   } catch (error) {
     console.error('Error updating workout:', error);
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const deleteWorkout = async (userId, name) => {
+  try {
+    await deleteDoc(doc(db, `user/${userId}/workout`, name));
+  } catch (error) {
+    console.error('Error deleting workout:', error);
     throw new Error(getErrorMessage(error));
   }
 };
