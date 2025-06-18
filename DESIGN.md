@@ -6,7 +6,7 @@ InTheGym is designed with exhausted users in mind. Every interaction is optimize
 - Clear visual hierarchy
 - High contrast for readability
 - Minimal cognitive load
-Note that this doesn't apply to when in Edit mode. We assume the users will create and edit workouts when they are not working out.
+Note that this doesn't apply to Edit mode. We assume the users will create and edit workouts when they are not working out.
 
 ## Color System
 - Primary: iOS Blue (#007AFF) - Used for primary actions and key UI elements
@@ -65,3 +65,40 @@ Modals and dialogs follow these principles:
 - Evaluate the need for sound feedback
 - Monitor user behavior for areas needing larger touch targets
 - Consider adding voice control for hands-free operation during workouts 
+
+## Firebase Implementation
+
+### Authentication
+- Uses Firebase Authentication with multiple sign-in methods:
+  - Anonymous authentication for quick access
+  - Email/password authentication for registered users
+- Persistent authentication state using AsyncStorage
+- Custom error handling with user-friendly messages
+- Auth state management through React hooks (useAuth)
+
+### Data Structure
+- Firestore database organization:
+  - Root collection: `user`
+  - Per-user subcollection: `workout`
+  - Each workout document contains exercise data
+
+### Data Operations
+- Read operations:
+  - Loading workouts through `loadHome` function
+  - Real-time auth state monitoring
+- Write operations:
+  - Workout updates through `updateWorkout` function
+  - Document creation/updates using `setDoc`
+
+### Error Handling
+- Comprehensive error handling with specific error codes
+- User-friendly error messages for common scenarios:
+  - Authentication errors (invalid credentials, disabled accounts)
+  - Network-related issues
+  - Permission errors
+- Consistent error logging for debugging
+
+### Security Considerations
+- Authentication state persistence with React Native AsyncStorage
+- Protected database paths using user IDs
+- Error messages designed to avoid exposing sensitive information 
