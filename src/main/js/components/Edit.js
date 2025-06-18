@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef
+} from 'react';
 import {
   StyleSheet, View, Text, TextInput, Pressable, ScrollView
 } from 'react-native';
@@ -6,45 +11,70 @@ import { useTheme } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import RadioSelector from './gadgets/RadioSelector';
 
+const SAVE_DEBOUNCE_MS = 1000; // 1 second debounce for auto-save
+
 const Edit = ({ exercise: original, onUpdate }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const pressableStyle = pressable(theme);
   const [exercise, setExercise] = useState(original);
+  const [saveStatus, setSaveStatus] = useState(''); // '', 'saving', 'saved'
+  const saveTimeoutRef = useRef(null);
+
+  const debouncedSave = useCallback((updatedExercise) => {
+    setSaveStatus('saving');
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    saveTimeoutRef.current = setTimeout(() => {
+      onUpdate(original.title, updatedExercise);
+      setSaveStatus('saved');
+      // Clear "saved" status after 2 seconds
+      setTimeout(() => setSaveStatus(''), 2000);
+    }, SAVE_DEBOUNCE_MS);
+  }, [onUpdate, original.title]);
+
+  const updateExercise = useCallback((updater) => {
+    setExercise((prev) => {
+      const updated = updater(prev);
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const setTitle = useCallback((value) => {
     if (!value) return;
-    setExercise((prev) => ({ ...prev, title: value }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, title: value }));
+  }, [updateExercise]);
 
   const setExecutionAmount = useCallback((value) => {
-    setExercise((prev) => ({ ...prev, execution: { ...prev.execution, amount: Number(value) } }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, execution: { ...prev.execution, amount: Number(value) } }));
+  }, [updateExercise]);
 
   const setExecutionUnit = useCallback((value) => {
-    setExercise((prev) => ({ ...prev, execution: { ...prev.execution, unit: value } }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, execution: { ...prev.execution, unit: value } }));
+  }, [updateExercise]);
 
   const setLoadAmount = useCallback((value) => {
-    setExercise((prev) => ({ ...prev, load: { ...prev.load, amount: Number(value) } }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, load: { ...prev.load, amount: Number(value) } }));
+  }, [updateExercise]);
 
   const setLoadUnit = useCallback((value) => {
-    setExercise((prev) => ({ ...prev, load: { ...prev.load, unit: value } }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, load: { ...prev.load, unit: value } }));
+  }, [updateExercise]);
 
   const setLoadIncrease = useCallback((value) => {
-    setExercise((prev) => ({ ...prev, load: { ...prev.load, increase: Number(value) } }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, load: { ...prev.load, increase: Number(value) } }));
+  }, [updateExercise]);
 
   const setSeries = useCallback((value) => {
     if (value < 1) return;
-    setExercise((prev) => ({ ...prev, series: Number(value) }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, series: Number(value) }));
+  }, [updateExercise]);
 
   const setPause = useCallback((value) => {
-    setExercise((prev) => ({ ...prev, pause: Number(value) }));
-  }, []);
+    updateExercise((prev) => ({ ...prev, pause: Number(value) }));
+  }, [updateExercise]);
 
   const numberFilter = useCallback((text) => (text.match(/\d*/g)), []);
   const noFilter = useCallback(() => true, []);
@@ -52,6 +82,15 @@ const Edit = ({ exercise: original, onUpdate }) => {
   useEffect(() => {
     setExercise(original);
   }, [original]);
+
+  useEffect(() => {
+    // Cleanup any pending save timeouts
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <ScrollView
@@ -133,21 +172,20 @@ const Edit = ({ exercise: original, onUpdate }) => {
         />
       </View>
       <View style={styles.button}>
-        <Pressable
-          style={pressableStyle}
-          onPress={() => onUpdate(original.title, exercise)}
-        >
-          <Text style={styles.buttonText}>Save</Text>
-        </Pressable>
-        <Pressable
-          style={pressableStyle}
-          onPress={() => onUpdate(original.title, null)}
-        >
-          <Ionicons
-            name="trash-bin"
-            style={styles.buttonText}
-          />
-        </Pressable>
+        <View style={styles.buttonContent}>
+          <Pressable
+            style={pressableStyle}
+            onPress={() => onUpdate(original.title, null)}
+          >
+            <Ionicons
+              name="trash-bin"
+              style={styles.buttonIcon}
+            />
+          </Pressable>
+          <Text style={styles.saveStatus}>
+            {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : ''}
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -246,14 +284,26 @@ const createStyles = ({ colors }) => {
     },
     button: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginTop: 24
+      justifyContent: 'center',
+      marginTop: 24,
+      paddingHorizontal: 18
     },
-    buttonText: {
-      fontFamily: 'serif',
-      fontSize: 22,
-      lineHeight: 26,
+    buttonContent: {
+      width: '60%',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      gap: 24
+    },
+    buttonIcon: {
+      fontSize: 24,
       color: colors.text
+    },
+    saveStatus: {
+      fontFamily: 'sans-serif',
+      fontSize: 16,
+      color: colors.text,
+      opacity: 0.7
     }
   };
 

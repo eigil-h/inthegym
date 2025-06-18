@@ -68,13 +68,21 @@ const EditWorkoutScreen = React.memo(({
   const updateExercise = useCallback(
     (prevTitle, exercise) => {
       console.log('Updating exercise', { prevTitle, exercise });
-      setExercises(
-        (prev) => prev
-          .filter((ex) => !(ex.title === prevTitle && exercise === null))
-          .map((ex) => (ex.title === prevTitle ? exercise : ex))
-      );
+      if (exercise === null) {
+        // Handle deletion
+        setExercises((prev) => prev.filter((ex) => ex.title !== prevTitle));
+        return;
+      }
+      setExercises((prev) => {
+        const updated = prev.map((ex) => (ex.title === prevTitle ? exercise : ex));
+        // If we're updating the selected exercise, update the selection
+        if (selected?.title === prevTitle) {
+          setSelected(exercise);
+        }
+        return updated;
+      });
     },
-    []
+    [selected]
   );
 
   const handleReorder = useCallback((from, to) => {
@@ -82,16 +90,20 @@ const EditWorkoutScreen = React.memo(({
     const newExercises = [...exercises];
     const [removed] = newExercises.splice(from, 1);
     newExercises.splice(to, 0, removed);
+    // Update selected exercise to follow its new position
+    if (selected === exercises[from]) {
+      setSelected(removed);
+    }
     setExercises(newExercises);
-  }, [exercises]);
+  }, [exercises, selected]);
 
   useEffect(() => setExercises(existingExercises), [existingExercises]);
 
+  // Only reset selection if the selected exercise is deleted
   useEffect(() => {
-    const current = exercises.find((ex) => ex.title === selected?.title);
-    if (!current) {
+    if (!exercises.some((ex) => ex === selected)) {
       console.log('Selected exercise not found, resetting selection');
-      setSelected(exercises?.[0]);
+      setSelected(exercises[0]);
     }
   }, [exercises, selected]);
 

@@ -62,24 +62,33 @@ const createRadioButtonStyles = ({ colors }) => {
       marginVertical: 3
     },
     circleContainer: {
-      paddingRight: 12
+      paddingRight: 12,
+      width: 24,
+      height: 24,
+      position: 'relative',
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     outerCircle: {
-      width: 16,
-      height: 16,
+      width: 20,
+      height: 20,
       borderWidth: 2,
-      borderRadius: 8,
-      borderColor: colors.text,
+      borderRadius: 10,
+      borderColor: colors.primary,
       backgroundColor: colors.card
     },
     innerCircle: {
-      ...StyleSheet.absoluteFillObject,
-      left: 4,
-      top: 4,
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: colors.text
+      position: 'absolute',
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: colors.primary,
+      top: '50%',
+      left: '50%',
+      transform: [
+        { translateX: -6 },
+        { translateY: -6 }
+      ]
     },
     label: {
       color: colors.text,

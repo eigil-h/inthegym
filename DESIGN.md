@@ -6,6 +6,7 @@ InTheGym is designed with exhausted users in mind. Every interaction is optimize
 - Clear visual hierarchy
 - High contrast for readability
 - Minimal cognitive load
+Note that this doesn't apply to when in Edit mode. We assume the users will create and edit workouts when they are not working out.
 
 ## Color System
 - Primary: iOS Blue (#007AFF) - Used for primary actions and key UI elements
